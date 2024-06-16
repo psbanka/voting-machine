@@ -1,5 +1,6 @@
 import './login.css'
 import { useState, ChangeEvent } from 'react'
+import { toast } from 'react-toastify'
 
 type AvatarImage = {
   file: File | null,
@@ -15,7 +16,6 @@ function Login(){
   const [avatarImage, setAvatarImage] = useState(initialImage);
 
   const handleAvatar = (e: ChangeEvent<HTMLInputElement>) => {
-    debugger
     if (e?.target?.files?.length) {
       setAvatarImage({
         file: e.target.files[0],
@@ -24,11 +24,20 @@ function Login(){
     }
   }
 
+  const handleLogin = (e: any) => {
+    e.preventDefault();
+    toast.warn("hello");
+    /*
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    */
+  }
+
   return (
     <div className='login'>
       <div className="item">
         <h2>Welcome back,</h2>
-        <form>
+        <form onSubmit={handleLogin}>
           <input type="text" placeholder="Email" name="email" />
           <input type="password" placeholder="Password" name="password" />
           <button type="submit">Login</button>
