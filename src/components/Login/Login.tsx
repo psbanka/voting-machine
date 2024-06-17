@@ -1,10 +1,11 @@
 import './login.css'
 import { useState, ChangeEvent } from 'react'
 import { toast } from 'react-toastify'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 import { doc, setDoc } from 'firebase/firestore'
 import { auth, db } from '../../lib/firebase'
 import { uploadImage } from '../../lib/upload'
+import type { SystemUser } from '../../types'
 
 type AvatarImage = {
   file: File | null,
@@ -16,69 +17,31 @@ const initialImage: AvatarImage = {
   url: ''
 }
 
-function Login(){
-  const [avatarImage, setAvatarImage] = useState(initialImage);
+type ProvideCredentialsProps = {
+  handleLogin: (e: any) => Promise<void>
+}
 
-  const handleAvatar = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e?.target?.files?.length) {
-      setAvatarImage({
-        file: e.target.files[0],
-        url: URL.createObjectURL(e.target.files[0]),
-      });
-    }
-  }
-
-  const handleLogin = (e: any) => {
-    e.preventDefault();
-    toast.warn("hello");
-    /*
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-    */
-  }
-
-  const handleRegister = async (e: any) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const { username, email, password } = Object.fromEntries(formData);
-
-    try {
-      const emailString = email as string;
-      const passwordString = password as string;
-      const res = await createUserWithEmailAndPassword(auth, emailString, passwordString);
-      const avatarUrl = await uploadImage(avatarImage.file as File, res.user.uid);
-      await setDoc(doc(db, `users`, res.user.uid), {
-        username,
-        email,
-        avatar: avatarUrl,
-        id: res.user.uid,
-      });
-      await setDoc(doc(db, `userVotes`, res.user.uid), {
-        username,
-        votes: [],
-        id: res.user.uid,
-      });
-      toast.success(`Account created for ${email}. You can login now.`);
-    } catch (error) {
-      debugger
-      console.error(error);
-      const anyError = error as any;
-      toast.error(`Error creating account ${anyError.message}`);
-    }
-    console.log(username, email, password);
-  }
-
+function ProvideCredentials({ handleLogin }: ProvideCredentialsProps){
   return (
-    <div className='login'>
-      <div className="item">
-        <h2>Welcome back,</h2>
-        <form onSubmit={handleLogin}>
-          <input type="text" placeholder="Email" name="email" />
-          <input type="password" placeholder="Password" name="password" />
-          <button type="submit">Login</button>
-        </form>
-      </div>
-      <div className="separator"></div>
+    <div className="item">
+      <h2>Welcome back,</h2>
+      <form onSubmit={handleLogin}>
+        <input type="text" placeholder="Email" name="email" />
+        <input type="password" placeholder="Password" name="password" />
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  );
+}
+
+type RegisterProps = {
+  handleRegister: (e: any) => Promise<void>
+  avatarImage: AvatarImage,
+  handleAvatar: (e: ChangeEvent<HTMLInputElement>) => void
+}
+
+function Register({ handleRegister, avatarImage, handleAvatar }: RegisterProps) {
+  return (
       <div className="item">
         <h2>Create an account</h2>
         <form onSubmit={handleRegister}>
@@ -92,6 +55,87 @@ function Login(){
           <button type="submit">Sign up</button>
         </form>
       </div>
+  );
+}
+
+type LoginProps = {
+  setUser: (user: SystemUser) => void
+}
+
+function Login({ setUser }: LoginProps){
+  const [signup, setSignup] = useState(true);
+  const [avatarImage, setAvatarImage] = useState(initialImage);
+
+  const handleAvatar = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e?.target?.files?.length) {
+      setAvatarImage({
+        file: e.target.files[0],
+        url: URL.createObjectURL(e.target.files[0]),
+      });
+    }
+  }
+
+  const handleLogin = async (e: any) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    const res = await signInWithEmailAndPassword(auth, email, password);
+    const user: SystemUser = {
+      username: '',
+      email,
+      id: res.user.uid,
+    }
+    // TODO: get avatar URL from storage
+    const userData = await doc(db, `users`, res.user.uid);
+    userData.exists() && (user.username = userData.data().username);
+    setUser(user);
+  }
+
+  const handleRegister = async (e: any) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const { username, email, password } = Object.fromEntries(formData);
+
+    try {
+      const emailString = email as string;
+      const passwordString = password as string;
+      const usernameString = username as string;
+      const res = await createUserWithEmailAndPassword(auth, emailString, passwordString);
+      const avatarUrl = await uploadImage(avatarImage.file as File, res.user.uid);
+      const user: SystemUser = {
+        username: usernameString,
+        email: emailString,
+        id: res.user.uid,
+      }
+      if (avatarUrl) {
+        user.avatar = avatarUrl;
+      }
+      await setDoc(doc(db, `users`, res.user.uid), user);
+      await setDoc(doc(db, `userVotes`, res.user.uid), {
+        username,
+        votes: [],
+        id: res.user.uid,
+      });
+      toast.success(`Account created for ${email}`);
+      setUser(user);
+    } catch (error) {
+      debugger
+      console.error(error);
+      const anyError = error as any;
+      toast.error(`Error creating account ${anyError.message}`);
+    }
+    throw new Error('Error creating account');
+  }
+
+  return (
+    <div className='login'>
+      {signup
+        ? <Register handleRegister={handleRegister} handleAvatar={handleAvatar} avatarImage={avatarImage}/>
+        : <ProvideCredentials handleLogin={handleLogin}/>
+      }
+      <button className="switch-button" onClick={() => setSignup(!signup)}>
+        {signup ? "Already have an account?" : "Create an account"}
+      </button>
     </div>
   )
 }

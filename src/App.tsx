@@ -1,22 +1,21 @@
 import List from './components/list/List'
-import Detail from './components/detail/Detail'
-import Vote from './components/vote/Vote'
 import Login from './components/Login/Login'
 import Notification from './components/Notification/Notification'
+import type { SystemUser } from './types'
+import { useState } from 'react'
 
 const App = () => {
-  const user = false;
+  const [ user, setUser ] = useState<SystemUser | null>(null);
+
 
   return (
     <div className='container'>
       {
         user ? (
           <>
-            <List/>
-            <Detail />
-            <Vote />
+            <List user={user}/>
           </>
-        ) : (<Login/>)
+        ) : (<Login setUser={setUser}/>)
       }
       <Notification />
     </div>

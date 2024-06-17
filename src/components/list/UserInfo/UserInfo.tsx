@@ -1,11 +1,16 @@
 import './userInfo.css'
+import type { SystemUser } from '../../../types'
 
-function UserInfo(){
+type UserInfoProps = {
+  user: SystemUser
+}
+
+function UserInfo({ user }: UserInfoProps){
   return (
     <div className='userInfo'>
       <div className="user">
-        <img src="./avatar.png" alt="avatar" />
-        <h2>John Appleseed</h2>
+        <img src={user.avatar || "./avatar.png"} alt="avatar" />
+        <h2>{user.username}</h2>
       </div>
       <div className="icons">
         <img src="./more.png" alt="more" />
