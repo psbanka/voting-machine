@@ -25,3 +25,11 @@ export type ElectionData = {
   state: ElectionState;
   users: string[];
 }
+
+export type Votes = {
+  voterId: string;
+  firstChoice: string[];
+  secondChoice: string[];
+  thirdChoice: string[];
+  finished: boolean;
+}

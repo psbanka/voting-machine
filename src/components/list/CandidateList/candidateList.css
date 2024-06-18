@@ -1,3 +1,14 @@
+.finished {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #1a73e8;
+  font-weight: bold;
+  font-size: 24px;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
 .candidateList {
   flex: 1;
   overflow: scroll;

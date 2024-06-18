@@ -3,18 +3,10 @@ import { useState, useEffect } from 'react'
 import { onSnapshot, collection, setDoc, doc } from 'firebase/firestore'
 import { db } from '../../../lib/firebase'
 import AddCandidate from './AddCandidate/AddCandidate'
-import type { Candidate } from '../../../types'
+import type { Candidate, Votes } from '../../../types'
 import CandidateDetail from '../../CandidateDetail/CandidateDetail'
 import { useUserStore } from '../../../lib/userStore'
 import {toast} from 'react-toastify'
-
-type Votes = {
-  voterId: string;
-  firstChoice: string[];
-  secondChoice: string[];
-  thirdChoice: string[];
-  finished: boolean;
-}
 
 function CandidateList(){
   const [editState, setEditState] = useState(false);
@@ -115,60 +107,43 @@ function CandidateList(){
     setSelectedCandidate(null);
   }
 
+  const handleFinished = async () => {
+    if (currentUser == null) return;
+    if (votes == null) return;
+    await setDoc(doc(db, 'votes', currentUser.id), {finished: true}, {merge: true});
+  }
+
   return (
-    <div className="candidateList">
-      <div className="search">
-        <div className="searchBar">
-          <img src="./search.png" alt="search" />
-          <input type="text" placeholder="Search candidate" />
-        </div>
-        <img src="./plus.png" alt="plus" className="add" onClick={() => setEditState(true)}/>
-      </div>
-      <div>
-        {editState ? <AddCandidate close={handleClose}/> : null}
-        {selectedCandidate ? <CandidateDetail candidate={selectedCandidate} handleVote={handleVote}/> : null}
-      {
-        candidates.map((candidate) => (
-          <div className="item" key={candidate.id} onClick={() => selectCandidate(candidate?.id)} >
-            <img src={candidate.avatar || "./avatar.png"} alt="avatar" />
-            <div className="info">
-              <h2>{candidate.name}</h2>
-              <p>{candidate.heading}</p>
-              {votes?.firstChoice?.includes(candidate?.id || '') ? <p>✅ VOTED 1️⃣</p> : null}
-              {votes?.secondChoice?.includes(candidate?.id || '') ? <p>✅ VOTED 2️⃣</p> : null}
-              {votes?.thirdChoice?.includes(candidate?.id || '') ? <p>✅ VOTED 3️⃣</p> : null}
-            </div>
+    <>
+      <div className="candidateList">
+        <div className="search">
+          <div className="searchBar">
+            <img src="./search.png" alt="search" />
+            <input type="text" placeholder="Search candidate" />
           </div>
-        ))
-      }
-      </div>
-
-{/*
-      <div className="item">
-        <img src="./avatar.png" alt="avatar" />
-        <div className="info">
-          <h2>Rev Nat</h2>
-          <p>✅ VOTED</p>
+          <img src="./plus.png" alt="plus" className="add" onClick={() => setEditState(true)}/>
+        </div>
+        <div>
+          {editState ? <AddCandidate close={handleClose}/> : null}
+          {selectedCandidate ? <CandidateDetail candidate={selectedCandidate} handleVote={handleVote}/> : null}
+        {
+          candidates.map((candidate) => (
+            <div className="item" key={candidate.id} onClick={() => selectCandidate(candidate?.id)} >
+              <img src={candidate.avatar || "./avatar.png"} alt="avatar" />
+              <div className="info">
+                <h2>{candidate.name}</h2>
+                <p>{candidate.heading}</p>
+                {votes?.firstChoice?.includes(candidate?.id || '') ? <p>✅ VOTED 1️⃣</p> : null}
+                {votes?.secondChoice?.includes(candidate?.id || '') ? <p>✅ VOTED 2️⃣</p> : null}
+                {votes?.thirdChoice?.includes(candidate?.id || '') ? <p>✅ VOTED 3️⃣</p> : null}
+              </div>
+            </div>
+          ))
+        }
         </div>
       </div>
-
-      <div className="item">
-        <img src="./avatar.png" alt="avatar" />
-        <div className="info">
-          <h2>Rev Nat</h2>
-          <p>✅ VOTED</p>
-        </div>
-      </div>
-
-      <div className="item">
-        <img src="./avatar.png" alt="avatar" />
-        <div className="info">
-          <span>Rev Nat</span>
-          <p>✅ VOTED</p>
-        </div>
-      </div>
-    */}
-    </div>
+      <button disabled={votes == null} className='finished' onClick={() => handleFinished()}>Finished Voting</button>
+    </>
   )
 }
 
