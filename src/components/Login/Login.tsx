@@ -5,12 +5,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'fire
 import { doc, setDoc } from 'firebase/firestore'
 import { auth, db } from '../../lib/firebase'
 import { uploadImage } from '../../lib/upload'
-import type { SystemUser } from '../../types'
-
-type AvatarImage = {
-  file: File | null,
-  url: string
-}
+import type { SystemUser, AvatarImage } from '../../types'
 
 const initialImage: AvatarImage = {
   file: null,
@@ -58,11 +53,7 @@ function Register({ handleRegister, avatarImage, handleAvatar }: RegisterProps) 
   );
 }
 
-type LoginProps = {
-  setUser: (user: SystemUser) => void
-}
-
-function Login({ setUser }: LoginProps){
+function Login(){
   const [signup, setSignup] = useState(true);
   const [avatarImage, setAvatarImage] = useState(initialImage);
 
@@ -79,16 +70,7 @@ function Login({ setUser }: LoginProps){
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    const res = await signInWithEmailAndPassword(auth, email, password);
-    const user: SystemUser = {
-      username: '',
-      email,
-      id: res.user.uid,
-    }
-    // TODO: get avatar URL from storage
-    const userData = await doc(db, `users`, res.user.uid);
-    userData.exists() && (user.username = userData.data().username);
-    setUser(user);
+    await signInWithEmailAndPassword(auth, email, password);
   }
 
   const handleRegister = async (e: any) => {
@@ -117,7 +99,6 @@ function Login({ setUser }: LoginProps){
         id: res.user.uid,
       });
       toast.success(`Account created for ${email}`);
-      setUser(user);
     } catch (error) {
       debugger
       console.error(error);
