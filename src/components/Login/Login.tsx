@@ -93,10 +93,12 @@ function Login(){
         user.avatar = avatarUrl;
       }
       await setDoc(doc(db, `users`, res.user.uid), user);
-      await setDoc(doc(db, `userVotes`, res.user.uid), {
-        username,
-        votes: [],
-        id: res.user.uid,
+      await setDoc(doc(db, `votes`, res.user.uid), {
+        voterId: username,
+        firstChoice: [],
+        secondChoice: [],
+        thirdChoice: [],
+        finished: false,
       });
       toast.success(`Account created for ${email}`);
     } catch (error) {
