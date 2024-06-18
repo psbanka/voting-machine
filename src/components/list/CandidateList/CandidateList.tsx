@@ -1,6 +1,6 @@
 import './candidateList.css'
 import { useState, useEffect } from 'react'
-import { onSnapshot, collection, doc } from 'firebase/firestore'
+import { onSnapshot, collection } from 'firebase/firestore'
 import { db } from '../../../lib/firebase'
 import AddCandidate from './AddCandidate/AddCandidate'
 import type { Candidate } from '../../../types'

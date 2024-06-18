@@ -14,7 +14,7 @@ type AddCandidateProps = {
   close: () => void
 }
 
-function AddCandidate({ close: handleCancel }: AddCandidateProps){
+function AddCandidate({ close }: AddCandidateProps){
   const [avatarImage, setAvatarImage] = useState(initialImage);
   async function handleAdd(e: any){
     e.preventDefault();

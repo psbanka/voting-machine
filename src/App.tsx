@@ -1,5 +1,5 @@
-import List from './components/list/List'
 import Login from './components/Login/Login'
+import StateRouter from './components/StateRouter/StateRouter'
 import Notification from './components/Notification/Notification'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useEffect } from 'react'
@@ -15,6 +15,7 @@ const App = () => {
       if (!newUser) {
         return;
       }
+      console.log(newUser.uid)
       fetchUserInfo(newUser.uid);
     });
     return unSub;
@@ -26,11 +27,7 @@ const App = () => {
     <div className='container'>
       <SystemErrorBoundary>
       {
-        currentUser ? (
-          <>
-            <List/>
-          </>
-        ) : (<Login/>)
+        currentUser ? (<StateRouter />) : (<Login/>)
       }
       <Notification />
       </SystemErrorBoundary>

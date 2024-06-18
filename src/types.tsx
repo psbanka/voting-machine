@@ -18,3 +18,10 @@ export type AvatarImage = {
   file: File | null,
   url: string
 }
+
+export type ElectionState = 'not-started' | 'voting' | 'voted' | 'closed';
+
+export type ElectionData = {
+  state: ElectionState;
+  users: string[];
+}
