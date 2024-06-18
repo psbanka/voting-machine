@@ -1,0 +1,110 @@
+.candidateDetail {
+  width: max-content;
+  height: max-content;
+  padding: 30px;
+  background-color: rgba(17, 25, 40, 0.781);
+  border-radius: 10px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+
+  img {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+  }
+
+  .icons {
+    padding: 30px;
+    gap: 20px;
+    display: flex;
+
+    button {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      background-color: white;
+    }
+  }
+  
+
+
+
+  form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    input{
+      padding: 20px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+    }
+
+    textarea{
+      padding: 20px;
+      height: 150px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+    }
+
+    label.avatar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      text-decoration: underline;
+
+      img {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        object-fit: cover;
+        opacity: 60%;
+      }
+    }
+    button{
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  }
+
+  .user{
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .detail{
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      img{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    }
+
+    button{
+      padding: 10px;
+      border-radius: 10px;
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  }
+}

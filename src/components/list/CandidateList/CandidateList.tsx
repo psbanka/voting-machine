@@ -4,10 +4,12 @@ import { onSnapshot, collection } from 'firebase/firestore'
 import { db } from '../../../lib/firebase'
 import AddCandidate from './AddCandidate/AddCandidate'
 import type { Candidate } from '../../../types'
+import CandidateDetail from '../../CandidateDetail/CandidateDetail'
 
 function CandidateList(){
   const [editState, setEditState] = useState(false);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
   useEffect(() => {
     const unSub = onSnapshot(collection(db, 'candidates'), (snapshot) => {
       const newCandidates: Candidate[] = snapshot?.docs.map((doc) => {
@@ -25,6 +27,19 @@ function CandidateList(){
     setEditState(false);
   }
 
+  const selectCandidate = (id: string | undefined) => {
+    if (id == null) return;
+    const candidate = candidates.find((candidate) => candidate.id === id);
+    if(candidate){
+      setSelectedCandidate(candidate);
+    }
+  }
+
+  const handleVote = (vote: number | null) => {
+    console.log(vote);
+    setSelectedCandidate(null);
+  }
+
   return (
     <div className="candidateList">
       <div className="search">
@@ -36,9 +51,10 @@ function CandidateList(){
       </div>
       <div>
         {editState ? <AddCandidate close={handleClose}/> : null}
+        {selectedCandidate ? <CandidateDetail candidate={selectedCandidate} handleVote={handleVote}/> : null}
       {
         candidates.map((candidate) => (
-          <div className="item" key={candidate.id}>
+          <div className="item" key={candidate.id} onClick={() => selectCandidate(candidate?.id)} >
             <img src={candidate.avatar || "./avatar.png"} alt="avatar" />
             <div className="info">
               <h2>{candidate.name}</h2>
