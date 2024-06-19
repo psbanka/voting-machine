@@ -30,6 +30,7 @@ function WaitForVoters({ targetState }: WaitForVotersProps){
         setVoters(users);
         if (targetState === 'closed') {
           const votePromises = electionData.users.map(async (id) => {
+            // TODO: Make this onSnapshot so it updates
             const voteDocRef = doc(db, 'votes', id);
             const voteDocSnap = await getDoc(voteDocRef);
             const vote = voteDocSnap.data() as Votes;
@@ -49,6 +50,11 @@ function WaitForVoters({ targetState }: WaitForVotersProps){
     });
     return unSub;
   }, [currentUser?.id, targetState]);
+
+  const handleReturn = () => {
+    if (currentUser == null) return;
+    setDoc(doc(db, 'votes', currentUser.id), { finished: false }, { merge: true });
+  }
 
   return (
     <div className='waitForVoters'>
@@ -76,7 +82,7 @@ function WaitForVoters({ targetState }: WaitForVotersProps){
           </div>
         )
       }
-      <button>Return to voting</button>
+      <button onClick={handleReturn}>Return to voting</button>
     </div>
   )
 }
