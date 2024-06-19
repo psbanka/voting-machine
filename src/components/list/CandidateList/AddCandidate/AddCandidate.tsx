@@ -30,7 +30,7 @@ function AddCandidate({ close }: AddCandidateProps){
     if (avatarUrl) {
       newCandidate.avatar = avatarUrl;
     }
-    await setDoc(doc(db, 'candidates', candidate.id), { avatar: avatarUrl }, { merge: true });
+    await setDoc(doc(db, 'candidates', candidate.id), { id: candidate.id, avatar: avatarUrl }, { merge: true });
     close();
   }
 

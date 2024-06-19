@@ -8,6 +8,7 @@ import List from '../list/List'
 import type { ElectionData, ElectionState, Votes } from '../../types';
 import WaitForVoters from '../WaitForVoters/WaitForVoters';
 import UserInfo from '../list/UserInfo/UserInfo'
+import SeeResults from '../SeeResults/SeeResults'
 
 function NextComponent(userElectionState: ElectionState) {
   switch (userElectionState) {
@@ -19,7 +20,7 @@ function NextComponent(userElectionState: ElectionState) {
     case 'voted':
       return <WaitForVoters targetState='closed'/>
     case 'closed':
-      return <div className='stateRouter'>Closed</div>
+      return <SeeResults />
     default:
       return <div className='stateRouter'>Loading...</div>
   }
@@ -62,7 +63,6 @@ function StateRouter(){
       {NextComponent(userElectionState)}
     </div>
   )
-
 }
 
 export default StateRouter
