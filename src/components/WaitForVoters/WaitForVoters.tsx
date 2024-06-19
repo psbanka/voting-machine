@@ -28,35 +28,34 @@ function WaitForVoters({ targetState }: WaitForVotersProps){
       await Promise.all(promises).then((users) => {
         console.log(targetState, electionData.state)
         setVoters(users);
-      });
-      if (targetState === 'closed') {
-        const votePromises = electionData.users.map(async (id) => {
-          const voteDocRef = doc(db, 'votes', id);
-          const voteDocSnap = await getDoc(voteDocRef);
-          const vote = voteDocSnap.data() as Votes;
-          debugger
-          if(vote.finished){
-            setFinishedVoters((prev) => [...prev, id]);
-          }
-          return id;
+        if (targetState === 'closed') {
+          const votePromises = electionData.users.map(async (id) => {
+            const voteDocRef = doc(db, 'votes', id);
+            const voteDocSnap = await getDoc(voteDocRef);
+            const vote = voteDocSnap.data() as Votes;
+            if(vote.finished){
+              setFinishedVoters((prev) => [...prev, id]);
+            }
+            return id;
+          });
+          Promise.all(votePromises).then(() => {
+            if (finishedVoters.length === electionData.users.length) {
+              console.log('Close the election');
+              setDoc(doc(db, 'elections', 'current'), { state: 'closed' }, { merge: true });
+            }
+          });
+        }
         });
-        Promise.all(votePromises).then(() => {
-          if (finishedVoters.length === electionData.users.length) {
-            console.log('Close the election');
-            setDoc(doc(db, 'elections', 'current'), { state: 'closed' }, { merge: true });
-          }
-        });
-      }
     });
     return unSub;
-  }, [currentUser?.id]);
+  }, [currentUser?.id, targetState]);
 
   return (
     <div className='waitForVoters'>
       {
         voters?.length ? (
           <div className='waiting'>
-            <h1>Waiting for voters...</h1>
+            <h1>Waiting for voters...{targetState}</h1>
             <h2 style={{padding: '10px'}}>Current voters:</h2>
             <ul>
               {voters.map((voter) => (
@@ -64,7 +63,7 @@ function WaitForVoters({ targetState }: WaitForVotersProps){
                   <div className="user">
                     <img src={voter?.avatar || "./avatar.png"} alt="avatar" />
                     <h2>{voter?.username}</h2>
-                    {finishedVoters.includes(voter.id) ? <p>✅</p> : <p>❌</p>}
+                    {targetState !== 'closed' ? null : finishedVoters.includes(voter.id) ? <p>✅</p> : <p>❌</p>}
                   </div>
                 </div>
               ))}
@@ -77,6 +76,7 @@ function WaitForVoters({ targetState }: WaitForVotersProps){
           </div>
         )
       }
+      <button>Return to voting</button>
     </div>
   )
 }

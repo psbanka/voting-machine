@@ -7,6 +7,23 @@ import { useUserStore } from '../../lib/userStore'
 import List from '../list/List'
 import type { ElectionData, ElectionState, Votes } from '../../types';
 import WaitForVoters from '../WaitForVoters/WaitForVoters';
+import UserInfo from '../list/UserInfo/UserInfo'
+
+function NextComponent(userElectionState: ElectionState) {
+  switch (userElectionState) {
+    case 'not-started':
+      return < WaitForVoters targetState='voting'/>
+      break;
+    case 'voting':
+      return <List/>
+    case 'voted':
+      return <WaitForVoters targetState='closed'/>
+    case 'closed':
+      return <div className='stateRouter'>Closed</div>
+    default:
+      return <div className='stateRouter'>Loading...</div>
+  }
+}
 
 function StateRouter(){
   const { currentUser } = useUserStore();
@@ -39,20 +56,13 @@ function StateRouter(){
   }
 
   console.log('>>>', userElectionState)
+  return (
+    <div className='stateRouter'>
+      <UserInfo/>
+      {NextComponent(userElectionState)}
+    </div>
+  )
 
-  switch (userElectionState) {
-    case 'not-started':
-      return < WaitForVoters targetState='voting'/>
-      break;
-    case 'voting':
-      return <List/>
-    case 'voted':
-      return <WaitForVoters targetState='closed'/>
-    case 'closed':
-      return <div className='stateRouter'>Closed</div>
-    default:
-      return <div className='stateRouter'>Loading...</div>
-  }
 }
 
 export default StateRouter
