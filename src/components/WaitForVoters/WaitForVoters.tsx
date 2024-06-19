@@ -29,7 +29,7 @@ function WaitForVoters({ targetState }: WaitForVotersProps){
         console.log(targetState, electionData.state)
         setVoters(users);
         if (targetState === 'closed') {
-          const votePromises = electionData.users.map(async (id) => {
+          electionData.users.map(async (id) => {
             // TODO: Make this onSnapshot so it updates
             const voteDocRef = doc(db, 'votes', id);
             const voteDocSnap = await getDoc(voteDocRef);
@@ -39,14 +39,8 @@ function WaitForVoters({ targetState }: WaitForVotersProps){
             }
             return id;
           });
-          Promise.all(votePromises).then(() => {
-            if (finishedVoters.length === electionData.users.length) {
-              console.log('Close the election');
-              setDoc(doc(db, 'elections', 'current'), { state: 'closed' }, { merge: true });
-            }
-          });
         }
-        });
+      });
     });
     return unSub;
   }, [currentUser?.id, targetState]);
@@ -54,6 +48,19 @@ function WaitForVoters({ targetState }: WaitForVotersProps){
   const handleReturn = () => {
     if (currentUser == null) return;
     setDoc(doc(db, 'votes', currentUser.id), { finished: false }, { merge: true });
+  }
+
+  const handleJoin = async () => {
+    if (currentUser == null) return;
+    await setDoc(doc(db, 'votes', currentUser.id), { finished: false, firstChoice: [], secondChoice: [], thirdChoice: [] });
+    const electionDoc = doc(db, 'elections', 'current');
+    const electionDocSnap = await getDoc(electionDoc);
+    const electionData = electionDocSnap.data() as ElectionData;
+    const users = electionData.users;
+    if (!users.includes(currentUser.id)) {
+      users.push(currentUser.id);
+      setDoc(electionDoc, { users }, { merge: true });
+    }
   }
 
   return (
@@ -82,7 +89,8 @@ function WaitForVoters({ targetState }: WaitForVotersProps){
           </div>
         )
       }
-      <button onClick={handleReturn}>Return to voting</button>
+      {targetState === 'closed' && <button className="action" onClick={handleReturn}>Return to voting</button>}
+      {targetState === 'voting' && <button className="action" onClick={handleJoin}>Join the vote!</button>}
     </div>
   )
 }

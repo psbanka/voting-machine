@@ -40,7 +40,7 @@
   padding: 50px;
 }
 
-button{
+button.action {
   padding: 20px;
   border-radius: 10px;
   background-color: #1a73e8;
