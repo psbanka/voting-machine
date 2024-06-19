@@ -19,6 +19,7 @@ export const useUserStore = create<UserStore>((set) => ({
       if (userDoc.exists()) {
         const userSnap = userDoc.data();
         const currentUser: SystemUser = {
+          admin: userSnap.admin,
           id: userDoc.id,
           email: userSnap.email,
           username: userSnap.username,

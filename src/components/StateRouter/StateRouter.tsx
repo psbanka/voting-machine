@@ -9,8 +9,10 @@ import type { ElectionData, ElectionState, Votes } from '../../types';
 import WaitForVoters from '../WaitForVoters/WaitForVoters';
 import UserInfo from '../list/UserInfo/UserInfo'
 import SeeResults from '../SeeResults/SeeResults'
+import Admin from '../Admin/Admin'
 
-function NextComponent(userElectionState: ElectionState) {
+function NextComponent(userElectionState: ElectionState, adminMode: boolean, setAdminMode: (mode: boolean) => void) { 
+  if (adminMode) return <Admin exitAdminMode={() => setAdminMode(false)}/>
   switch (userElectionState) {
     case 'not-started':
       return < WaitForVoters targetState='voting'/>
@@ -30,6 +32,7 @@ function StateRouter(){
   const { currentUser } = useUserStore();
   const [ electionState, setElectionState ] = useState<ElectionState>('not-started');
   const [ hasVoted, setHasVoted ] = useState(false);
+  const [ adminMode, setAdminMode ] = useState(false);
   
   // Election state
   useEffect(() => {
@@ -59,8 +62,8 @@ function StateRouter(){
   console.log('>>>', userElectionState)
   return (
     <div className='stateRouter'>
-      <UserInfo/>
-      {NextComponent(userElectionState)}
+      <UserInfo turnOnAdminMode={() => setAdminMode(true)}/>
+      {NextComponent(userElectionState, adminMode, setAdminMode)}
     </div>
   )
 }

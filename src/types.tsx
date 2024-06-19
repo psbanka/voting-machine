@@ -1,5 +1,6 @@
 
 export type SystemUser = {
+  admin?: boolean,
   username: string
   email: string | null,
   avatar?: string,

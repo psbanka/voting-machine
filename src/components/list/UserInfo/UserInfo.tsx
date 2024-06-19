@@ -1,8 +1,16 @@
 import './userInfo.css'
 import { useUserStore } from '../../../lib/userStore'
 
-function UserInfo(){
+type UserInfoProps = {
+  turnOnAdminMode: () => void;
+}
+
+function UserInfo({ turnOnAdminMode }: UserInfoProps){
   const { currentUser } = useUserStore();
+
+  function handleAdmin(){
+    turnOnAdminMode();
+  }
 
   return (
     <div className='userInfo'>
@@ -12,6 +20,7 @@ function UserInfo(){
       </div>
       <div className="icons">
         <img src="./more.png" alt="more" />
+        {currentUser?.admin && <button onClick={handleAdmin}>Admin</button>}
         <img src="./edit.png" alt="edit" />
       </div>
     </div>
