@@ -5,8 +5,8 @@ import { db } from '../../lib/firebase'
 import { useEffect } from 'react'
 import { useUserStore } from '../../lib/userStore'
 import List from '../list/List'
-import type { ElectionData, ElectionState, Votes } from '../../types'
-import WaitForVoters from '../WaitForVoters/WaitForVoters'
+import type { ElectionData, ElectionState, Votes } from '../../types';
+import WaitForVoters from '../WaitForVoters/WaitForVoters';
 
 function StateRouter(){
   const { currentUser } = useUserStore();
@@ -32,12 +32,13 @@ function StateRouter(){
     return unSub;
   }, [currentUser?.id]);
 
-  console.log(electionState)
 
   let userElectionState = electionState;
   if (userElectionState === 'voting'  && hasVoted) {
     userElectionState = 'voted';
   }
+
+  console.log('>>>', userElectionState)
 
   switch (userElectionState) {
     case 'not-started':
@@ -46,7 +47,7 @@ function StateRouter(){
     case 'voting':
       return <List/>
     case 'voted':
-      return <div className='stateRouter'>Voted</div>
+      return <WaitForVoters targetState='closed'/>
     case 'closed':
       return <div className='stateRouter'>Closed</div>
     default:

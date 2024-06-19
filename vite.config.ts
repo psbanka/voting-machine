@@ -20,7 +20,7 @@ export default ({ mode }: { mode: "development" | "production" | "test" }) => {
       headers: {
         "Access-Control-Allow-Origin": "*", // Allow CORS
       },
-      host: "localhost",
+      host: "0.0.0.0",
       port: VITE_DEVELOPMENT_PORT,
     },
     build: {

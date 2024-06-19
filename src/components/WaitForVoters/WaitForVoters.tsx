@@ -1,5 +1,5 @@
 import './waitForVoters.css'
-import type { ElectionState, ElectionData, SystemUser } from '../../types'
+import type { ElectionState, ElectionData, SystemUser, Votes } from '../../types'
 import { useState } from 'react'
 import { onSnapshot, getDoc } from 'firebase/firestore'
 import { doc } from 'firebase/firestore'
@@ -14,6 +14,7 @@ type WaitForVotersProps = {
 function WaitForVoters({ targetState }: WaitForVotersProps){
   const { currentUser } = useUserStore();
   const [ voters, setVoters ] = useState<SystemUser[]>();
+  const [ finishedVoters, setFinishedVoters ] = useState<string[]>([]);
   
   useEffect(() => {
     const unSub = onSnapshot(doc(db, 'elections', 'current'), async (res) => {
@@ -27,6 +28,14 @@ function WaitForVoters({ targetState }: WaitForVotersProps){
       Promise.all(promises).then((users) => {
         console.log(targetState, electionData.state)
         setVoters(users);
+      });
+      electionData.users.forEach(async (id) => {
+        const voteDocRef = doc(db, 'votes', id);
+        const voteDocSnap = await getDoc(voteDocRef);
+        const vote = voteDocSnap.data() as Votes;
+        if(vote.finished){
+          setFinishedVoters((prev) => [...prev, id]);
+        }
       });
     });
     return unSub;
@@ -45,6 +54,7 @@ function WaitForVoters({ targetState }: WaitForVotersProps){
                   <div className="user">
                     <img src={voter?.avatar || "./avatar.png"} alt="avatar" />
                     <h2>{voter?.username}</h2>
+                    {finishedVoters.includes(voter.id) ? <p>✅</p> : <p>❌</p>}
                   </div>
                 </div>
               ))}
