@@ -5,7 +5,7 @@ import { db } from '../../lib/firebase'
 import { useEffect } from 'react'
 import { useUserStore } from '../../lib/userStore'
 import List from '../list/List'
-import type { ElectionData, ElectionState, Votes } from '../../types';
+import type { ElectionData, ElectionState, ActualVote } from '../../types';
 import WaitForVoters from '../WaitForVoters/WaitForVoters';
 import UserInfo from '../list/UserInfo/UserInfo'
 import SeeResults from '../SeeResults/SeeResults'
@@ -47,7 +47,7 @@ function StateRouter(){
   useEffect(() => {
     if (currentUser == null) return;
     const unSub = onSnapshot(doc(db, 'votes', currentUser?.id), (res) => {
-      const newVotes: Votes = res.data() as Votes;
+      const newVotes: ActualVote = res.data() as ActualVote;
       setHasVoted(newVotes.finished);
     });
     return unSub;

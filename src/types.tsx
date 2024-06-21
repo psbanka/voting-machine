@@ -27,7 +27,7 @@ export type ElectionData = {
   users: string[];
 }
 
-export type Votes = {
+export type ActualVote = {
   voterId: string;
   firstChoice: string[];
   secondChoice: string[];

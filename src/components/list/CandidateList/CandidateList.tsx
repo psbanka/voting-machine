@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { onSnapshot, collection, setDoc, doc } from 'firebase/firestore'
 import { db } from '../../../lib/firebase'
 import AddCandidate from './AddCandidate/AddCandidate'
-import type { Candidate, Votes } from '../../../types'
+import type { Candidate, ActualVote } from '../../../types'
 import CandidateDetail from '../../CandidateDetail/CandidateDetail'
 import { useUserStore } from '../../../lib/userStore'
 import {toast} from 'react-toastify'
@@ -12,7 +12,7 @@ function CandidateList(){
   const [editState, setEditState] = useState(false);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
-  const [votes, setVotes] = useState<Votes | null>(null);
+  const [votes, setVotes] = useState<ActualVote | null>(null);
   const { currentUser } = useUserStore();
 
   // Candidates
@@ -33,7 +33,7 @@ function CandidateList(){
   useEffect(() => {
     if (currentUser == null) return;
     const unSub = onSnapshot(doc(db, 'votes', currentUser?.id), (res) => {
-      const newVotes: Votes = res.data() as Votes;
+      const newVotes: ActualVote = res.data() as ActualVote;
       setVotes(newVotes);
     });
     return unSub;
@@ -55,7 +55,7 @@ function CandidateList(){
     console.log(vote);
     if (selectedCandidate?.id == null) return;
     if (currentUser == null) return;
-    const newVotes: Votes = {
+    const newVotes: ActualVote = {
       voterId: currentUser.id,
       firstChoice: votes?.firstChoice || [],
       secondChoice: votes?.secondChoice || [],

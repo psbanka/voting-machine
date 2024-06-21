@@ -1,5 +1,5 @@
 import './admin.css'
-import type { ElectionData, SystemUser, Votes } from '../../types'
+import type { ElectionData, SystemUser, ActualVote } from '../../types'
 import { faker } from '@faker-js/faker';
 import { addDoc, onSnapshot, getDoc, getDocs } from 'firebase/firestore'
 import { collection, doc, setDoc } from 'firebase/firestore'
@@ -42,7 +42,7 @@ function Admin({ exitAdminMode }: AdminProps){
         electionData.users.map(async (id) => {
           const voteDocRef = doc(db, 'votes', id);
           const voteDocSnap = await getDoc(voteDocRef);
-          const vote = voteDocSnap.data() as Votes;
+          const vote = voteDocSnap.data() as ActualVote;
           if(vote.finished){
             setFinishedVoters((prev) => [...prev, id]);
           }

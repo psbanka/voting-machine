@@ -1,5 +1,5 @@
 import './waitForVoters.css'
-import type { ElectionState, ElectionData, SystemUser, Votes } from '../../types'
+import type { ElectionState, ElectionData, SystemUser, ActualVote } from '../../types'
 import { useState } from 'react'
 import { onSnapshot, getDoc } from 'firebase/firestore'
 import { doc, setDoc } from 'firebase/firestore'
@@ -33,7 +33,7 @@ function WaitForVoters({ targetState }: WaitForVotersProps){
             // TODO: Make this onSnapshot so it updates
             const voteDocRef = doc(db, 'votes', id);
             const voteDocSnap = await getDoc(voteDocRef);
-            const vote = voteDocSnap.data() as Votes;
+            const vote = voteDocSnap.data() as ActualVote;
             if(vote.finished){
               setFinishedVoters((prev) => [...prev, id]);
             }
