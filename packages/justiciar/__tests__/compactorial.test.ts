@@ -4,15 +4,15 @@ import { describe, it, expect } from "vitest";
 
 describe("compactorial", () => {
 	it("should return the correct value", () => {
-		expect(compactorial(1n)).toBe(1n);
-		expect(compactorial(2n)).toBe(2n);
-		expect(compactorial(3n)).toBe(6n);
-		expect(compactorial(4n)).toBe(12n);
-		expect(compactorial(5n)).toBe(60n);
-		expect(compactorial(6n)).toBe(60n);
-		expect(compactorial(7n)).toBe(420n);
-		expect(compactorial(8n)).toBe(840n);
-		expect(compactorial(9n)).toBe(2520n);
+		expect(compactorial(1n).compute()).toBe(1n);
+		expect(compactorial(2n).compute()).toBe(2n);
+		expect(compactorial(3n).compute()).toBe(6n);
+		expect(compactorial(4n).compute()).toBe(12n);
+		expect(compactorial(5n).compute()).toBe(60n);
+		expect(compactorial(6n).compute()).toBe(60n);
+		expect(compactorial(7n).compute()).toBe(420n);
+		expect(compactorial(8n).compute()).toBe(840n);
+		expect(compactorial(9n).compute()).toBe(2520n);
 	});
 });
 

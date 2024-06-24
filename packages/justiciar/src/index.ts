@@ -17,6 +17,10 @@ export const candidateRegistrationOpenAtoms = atomFamily<boolean, string>({
 	key: "candidateRegistrationOpen",
 	default: true,
 });
+export const roundAtoms = atomFamily<number, string>({
+	key: "round",
+	default: 0, // 0 indicates that voting is open
+});
 
 export type ElectionConfig = {
 	winnerCount: bigint;
@@ -216,6 +220,7 @@ export class ElectionState {
 		public droopQuota = bond(droopQuotaSelectors),
 		public voterRegistrationOpen = bond(voterRegistrationOpenAtoms),
 		public candidateRegistrationOpen = bond(candidateRegistrationOpenAtoms),
+		public round = bond(roundAtoms),
 		public candidates = join(electionCandidates),
 		public voters = join(registeredVoters),
 	) {}
@@ -266,6 +271,11 @@ export const electionMolecules = moleculeFamily({
 		public castBallot = transaction<(ballot: Ballot) => void>({
 			key: "castBallot",
 			do: ({ get }, ballot) => {
+				if (get(this.state.round) !== 0) {
+					throw new Error(
+						`Tried to cast ballot for election "${this.key}" but voting is closed`,
+					);
+				}
 				const { voterId } = ballot;
 				const voterIndex = findRelations(
 					this.state.voters,
