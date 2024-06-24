@@ -13,7 +13,7 @@ export const makeJsonSchemaSystemMessage = (
 });
 const schemasDemo = squirrel.add("openai-schemas", aiData);
 async function inferDemoSchema(concept: string): Promise<string[]> {
-	const completion = await schemasDemo.for(`${concept}-schema`).get({
+	const completion = await schemasDemo.for(concept).get({
 		model: OPENAI_MODEL,
 		response_format: { type: "json_object" },
 		messages: [makeJsonSchemaSystemMessage(concept)],

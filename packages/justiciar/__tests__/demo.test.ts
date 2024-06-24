@@ -5,7 +5,8 @@ describe("demo schemas", () => {
 	test("generation", async () => {
 		const schemas = await Promise.all(
 			DEMO_DATA_CONCEPTS.map(
-				async (concept) => await getDemoJsonSchema.for(concept).get(concept),
+				async (concept) =>
+					await getDemoJsonSchema.for(`${concept}.schema`).get(concept),
 			),
 		);
 	}, 60000);
