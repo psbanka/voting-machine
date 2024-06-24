@@ -1,4 +1,4 @@
-export function getFactors(
+export function getPrimeFactors(
 	n: bigint,
 	factors = new Map<bigint, bigint>(),
 ): Map<bigint, bigint> {
@@ -7,7 +7,7 @@ export function getFactors(
 		if (n % i === 0n) {
 			const currentCount = factors.get(i) ?? 0n;
 			factors.set(i, currentCount + 1n);
-			getFactors(n / i, factors);
+			getPrimeFactors(n / i, factors);
 			break;
 		}
 		i += 1n;
@@ -18,21 +18,36 @@ export function getFactors(
 	return factors;
 }
 
-export function compactorial(n: bigint): bigint {
-	let idx = n - 1n;
-	const factors = getFactors(n);
-	while (idx > 1n) {
-		const newFactors = getFactors(idx);
-		for (const [factor, count] of newFactors) {
-			if (!factors.has(factor) || (factors.get(factor) ?? 0n) < count) {
-				factors.set(factor, count);
+export class PrimeFactors extends Map<bigint, bigint> {
+	constructor(n: bigint) {
+		super();
+		getPrimeFactors(n, this);
+	}
+	public incorporate(n: bigint): void {
+		const newFactors = getPrimeFactors(n);
+		for (const [newFactor, newCount] of newFactors) {
+			const existingFactorCount = this.get(newFactor);
+			if (!existingFactorCount || existingFactorCount < newCount) {
+				this.set(newFactor, newCount);
 			}
 		}
+	}
+	public compute(): bigint {
+		let result = 1n;
+		for (const [factor, count] of this) {
+			result *= factor ** count;
+		}
+		return result;
+	}
+}
+
+export function compactorial(n: bigint): PrimeFactors {
+	// count down natural numbers from n to 2
+	let idx = n - 1n;
+	const factors = new PrimeFactors(n);
+	while (idx > 1n) {
+		factors.incorporate(idx);
 		idx -= 1n;
 	}
-	let result = 1n;
-	for (const [factor, count] of factors) {
-		result *= factor ** count;
-	}
-	return result;
+	return factors;
 }

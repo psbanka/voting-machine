@@ -1,4 +1,4 @@
-import { compactorial, getFactors } from "../src/compactorial";
+import { compactorial, getPrimeFactors } from "../src/compactorial";
 
 import { describe, it, expect } from "vitest";
 
@@ -18,12 +18,12 @@ describe("compactorial", () => {
 
 describe("getFactors", () => {
 	it("should return the correct factors", () => {
-		expect(getFactors(1n)).toEqual(new Map([[1n, 1n]]));
-		expect(getFactors(2n)).toEqual(new Map([[2n, 1n]]));
-		expect(getFactors(3n)).toEqual(new Map([[3n, 1n]]));
-		expect(getFactors(4n)).toEqual(new Map([[2n, 2n]]));
-		expect(getFactors(5n)).toEqual(new Map([[5n, 1n]]));
-		expect(getFactors(6n)).toEqual(
+		expect(getPrimeFactors(1n)).toEqual(new Map([[1n, 1n]]));
+		expect(getPrimeFactors(2n)).toEqual(new Map([[2n, 1n]]));
+		expect(getPrimeFactors(3n)).toEqual(new Map([[3n, 1n]]));
+		expect(getPrimeFactors(4n)).toEqual(new Map([[2n, 2n]]));
+		expect(getPrimeFactors(5n)).toEqual(new Map([[5n, 1n]]));
+		expect(getPrimeFactors(6n)).toEqual(
 			new Map([
 				[2n, 1n],
 				[3n, 1n],
