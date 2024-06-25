@@ -1,5 +1,5 @@
 import { describe, it } from "vitest";
-import { electionMolecules, need } from "../src";
+import { electionMolecules, need, ok } from "../src";
 import {
 	getState,
 	makeMolecule,
@@ -39,7 +39,7 @@ describe("core procedures", () => {
 			runTransaction(election.castBallot)({
 				voterId: `voter${i}`,
 				votes: {
-					election0: [["candidate0"], ["candidate2"], ["candidate2"]],
+					election0: [["candidate0"], ["candidate1"], ["candidate2"]],
 				},
 			});
 		}
@@ -47,8 +47,12 @@ describe("core procedures", () => {
 		runTransaction(election.beginCounting)();
 
 		const round0 = election.spawnRound();
-		console.log(getState(need(round0.state.outcome)));
+		const round0Outcome = getState(need(round0.state.outcome));
+		if (!ok(round0Outcome)) throw round0Outcome;
+		console.log(...round0Outcome.candidates);
 		const round1 = election.spawnRound();
-		console.log(getState(need(round1.state.outcome)));
+		const round1Outcome = getState(need(round1.state.outcome));
+		if (!ok(round1Outcome)) throw round1Outcome;
+		console.log(...round1Outcome.candidates);
 	});
 });

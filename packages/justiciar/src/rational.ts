@@ -6,7 +6,7 @@ export class Rational {
 
 	protected toFloat(): number {
 		let total = 0;
-		for (const [denominator, numerator] of this.fractionalValues) {
+		for (const [denominator, numerator] of this.entries()) {
 			total += Number(numerator) / Number(denominator);
 		}
 		return total;

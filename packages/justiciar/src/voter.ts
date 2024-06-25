@@ -37,7 +37,7 @@ export const voterCurrentFavoritesSelectors = selectorFamily<
 	key: "voterCurrentFavorites",
 	get:
 		(keys) =>
-		({ get, find }) => {
+		({ get, seek }) => {
 			const votedForCandidateKeys = get(
 				findRelations(votes, keys.voter).candidateEntriesOfVoter,
 			);
@@ -46,9 +46,12 @@ export const voterCurrentFavoritesSelectors = selectorFamily<
 					electionRound: keys.electionRound,
 					candidate: candidateKey,
 				};
-				const candidateStatus = get(
-					find(candidateStatusSelectors, electionRoundCandidateKey),
+
+				const candidateStatusToken = seek(
+					candidateStatusSelectors,
+					electionRoundCandidateKey,
 				);
+				const candidateStatus = get(need(candidateStatusToken));
 				return candidateStatus === "running";
 			});
 			let topTier = Number.POSITIVE_INFINITY;
@@ -124,12 +127,14 @@ export const electionRoundVoteTotalsSelectors = selectorFamily<
 				const status = get(candidate.state.status);
 				return status === "running";
 			});
+
 			const voteTotals = runningCandidates
 				.map<ElectionRoundVoteTotal>((candidateKey) => {
 					const candidateTotalVote = new Rational();
 					const candidateVoterKeys = get(
 						findRelations(votes, candidateKey).voterKeysOfCandidate,
 					);
+
 					const myVoteDenominators = candidateVoterKeys
 						.map<bigint | null>((voterKey) => {
 							const voter =
@@ -143,6 +148,7 @@ export const electionRoundVoteTotalsSelectors = selectorFamily<
 							return denominator;
 						})
 						.filter((total) => total !== null);
+
 					for (const denominator of myVoteDenominators) {
 						candidateTotalVote.incorporate(1n, denominator);
 					}
