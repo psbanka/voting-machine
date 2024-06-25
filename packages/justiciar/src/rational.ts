@@ -1,7 +1,7 @@
 export class Rational {
-	private fractionalValues = new Map<bigint, bigint>();
+	protected fractionalValues = new Map<bigint, bigint>();
 
-	private toFloat(): number {
+	protected toFloat(): number {
 		let total = 0;
 		for (const [denominator, numerator] of this.fractionalValues) {
 			total += Number(numerator) / Number(denominator);
