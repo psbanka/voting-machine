@@ -1,3 +1,6 @@
+/**
+ * A lossless number.
+ */
 export class Rational {
 	protected fractionalValues = new Map<bigint, bigint>();
 

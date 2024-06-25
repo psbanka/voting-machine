@@ -32,12 +32,6 @@ describe("core procedures", () => {
 
 		runTransaction(election.beginVoting)();
 
-		// runTransaction(election.castBallot)({
-		// 	voterId: "voter0",
-		// 	votes: {
-		// 		election0: [["candidate0", "candidate1", "candidate2"]],
-		// 	},
-		// });
 		const droopQuota1 = getState(election.state.droopQuota);
 		console.log({ droopQuota1 });
 
@@ -49,9 +43,6 @@ describe("core procedures", () => {
 				},
 			});
 		}
-
-		// console.log(getState(findState(voterCurrentFavoritesSelectors, "voter0")));
-		// console.log(getState(findState(voterCurrentFavoritesSelectors, "voter0")));
 
 		runTransaction(election.beginCounting)();
 
