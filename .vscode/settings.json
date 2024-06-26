@@ -1,0 +1,65 @@
+{
+	"editor.wordSeparators": "./\\()\"'-:,.;<>~!@#%^&*|+=[]{}`~?",
+	"cSpell.words": [
+		"anvl",
+		"biomejs",
+		"Cardstock",
+		"comline",
+		"Deleters",
+		"Diagon",
+		"esbuild",
+		"estree",
+		"eyecuelab",
+		"filestore",
+		"hamr",
+		"hamt",
+		"immer",
+		"immerable",
+		"ingt",
+		"jeremybanka",
+		"lockb",
+		"Luum",
+		"metafile",
+		"npmlog",
+		"outfile",
+		"preact",
+		"Recasters",
+		"Renamers",
+		"revparse",
+		"Schemable",
+		"Selectables",
+		"svgr",
+		"testid",
+		"treeshake",
+		"tsup",
+		"unsub",
+		"wayforge",
+		"zustand"
+	],
+	"json.schemas": [
+		{
+			"fileMatch": ["**/break-check.config.json"],
+			"url": "./packages/break-check/dist/break-check.schema.json"
+		}
+	],
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "biomejs.biome",
+	"editor.codeActionsOnSave": {
+		"quickfix.biome": "explicit",
+		"source.fixAll.eslint": "explicit"
+	},
+	"[html]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[css]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[scss]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"coverage-gutters.coverageBaseDir": "**/coverage/"
+}
