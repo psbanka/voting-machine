@@ -36,19 +36,21 @@ function Admin({ exitAdminMode }: AdminProps): JSX.Element {
 				const user = userDocSnap.data() as SystemUser
 				return user
 			})
-			await Promise.all(promises).then((users) => {
+			await Promise.all(promises).then(async (users) => {
 				setVoters(users)
 
 				// Check if the voters have finished voting
-				electionData.users.map(async (id) => {
-					const voteDocRef = doc(db, `votes`, id)
-					const voteDocSnap = await getDoc(voteDocRef)
-					const vote = voteDocSnap.data() as ActualVote
-					if (vote.finished) {
-						setFinishedVoters((prev) => [...prev, id])
-					}
-					return id
-				})
+				await Promise.all(
+					electionData.users.map(async (id) => {
+						const voteDocRef = doc(db, `votes`, id)
+						const voteDocSnap = await getDoc(voteDocRef)
+						const vote = voteDocSnap.data() as ActualVote
+						if (vote.finished) {
+							setFinishedVoters((prev) => [...prev, id])
+						}
+						return id
+					}),
+				)
 			})
 		})
 		return unSub
@@ -81,7 +83,7 @@ function Admin({ exitAdminMode }: AdminProps): JSX.Element {
 		const electionDoc = doc(db, `elections`, `current`)
 		const electionDocSnap = await getDoc(electionDoc)
 		const electionData = electionDocSnap.data() as ElectionData
-		setDoc(
+		await setDoc(
 			doc(db, `elections`, `current`),
 			{ users: [...electionData.users, user.id] },
 			{ merge: true },

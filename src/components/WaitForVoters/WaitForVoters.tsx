@@ -25,20 +25,22 @@ function WaitForVoters({ targetState }: WaitForVotersProps): JSX.Element {
 				const user = userDocSnap.data() as SystemUser
 				return user
 			})
-			await Promise.all(promises).then((users) => {
+			await Promise.all(promises).then(async (users) => {
 				console.log(targetState, electionData.state)
 				setVoters(users)
 				if (targetState === `closed`) {
-					electionData.users.map(async (id) => {
-						// TODO: Make this onSnapshot so it updates
-						const voteDocRef = doc(db, `votes`, id)
-						const voteDocSnap = await getDoc(voteDocRef)
-						const vote = voteDocSnap.data() as ActualVote
-						if (vote.finished) {
-							setFinishedVoters((prev) => [...prev, id])
-						}
-						return id
-					})
+					await Promise.all(
+						electionData.users.map(async (id) => {
+							// TODO: Make this onSnapshot so it updates
+							const voteDocRef = doc(db, `votes`, id)
+							const voteDocSnap = await getDoc(voteDocRef)
+							const vote = voteDocSnap.data() as ActualVote
+							if (vote.finished) {
+								setFinishedVoters((prev) => [...prev, id])
+							}
+							return id
+						}),
+					)
 				}
 			})
 		})
@@ -64,7 +66,7 @@ function WaitForVoters({ targetState }: WaitForVotersProps): JSX.Element {
 		const users = electionData.users
 		if (!users.includes(currentUser.id)) {
 			users.push(currentUser.id)
-			setDoc(electionDoc, { users }, { merge: true })
+			await setDoc(electionDoc, { users }, { merge: true })
 		}
 	}
 
