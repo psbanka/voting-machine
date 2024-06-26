@@ -3,7 +3,8 @@
   "compilerOptions": {
     "types": ["node", "vitest/globals"],
     "jsx": "react-jsx",
-    "moduleResolution": "Bundler"
+    "moduleResolution": "Bundler",
+    "strict": true
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts"]
 }
