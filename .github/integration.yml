@@ -45,9 +45,6 @@ jobs:
       - name: Biome
         run: bun lint:biome
 
-      - name: ESLint (Build Original Plugins)
-        run: bun lint:eslint:build
-
       - name: ESLint
         run: bun lint:eslint
 
@@ -58,8 +55,6 @@ jobs:
     name: Build & Test
     runs-on: ubuntu-latest
     timeout-minutes: 7
-    env:
-      NEXT_PUBLIC_REMOTE_ORIGIN: ${{ secrets.NEXT_PUBLIC_REMOTE_ORIGIN }} 
 
     steps:
       - name: Checkout
@@ -84,12 +79,6 @@ jobs:
 
       - name: Install Dependencies
         run: pnpm i
-
-      - name: Set up Git
-        run: |
-          git config --global init.defaultBranch main
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
 
       - name: Build
         run: bun run build
