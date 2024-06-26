@@ -14,11 +14,11 @@ export class Rational {
 
 	public constructor(numerator?: bigint, denominator = 1n) {
 		if (numerator && denominator) {
-			this.incorporate(numerator, denominator);
+			this.add(numerator, denominator);
 		}
 	}
 
-	public incorporate(numerator: bigint, denominator: bigint): void {
+	public add(numerator: bigint, denominator: bigint): void {
 		let newNumerator = numerator;
 		const oldNumerator = this.fractionalValues.get(denominator);
 		if (oldNumerator) {
@@ -31,9 +31,7 @@ export class Rational {
 		return this.fractionalValues.entries();
 	}
 
-	public static isGreater(a: Rational) {
-		return {
-			than: (b: Rational) => a.toFloat() > b.toFloat(),
-		};
+	public isGreaterThan(that: Rational) {
+		return this.toFloat() > that.toFloat();
 	}
 }

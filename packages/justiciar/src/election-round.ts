@@ -44,15 +44,15 @@ export const electionRoundOutcomeSelectors = selectorFamily<
 			const droopQuotaRational = new Rational(droopQuota);
 			const winners = voteTotals
 				.filter(([, total]) => {
-					return !Rational.isGreater(droopQuotaRational).than(total);
+					return !droopQuotaRational.isGreaterThan(total);
 				})
 				.map<[string, Rational]>(([key, total]) => {
 					const surplus = new Rational();
 					for (const [denominator, numerator] of total.entries()) {
-						surplus.incorporate(numerator, denominator);
+						surplus.add(numerator, denominator);
 					}
 					for (const [denominator, numerator] of droopQuotaRational.entries()) {
-						surplus.incorporate(-numerator, denominator);
+						surplus.add(-numerator, denominator);
 					}
 					return [key, surplus];
 				});
@@ -70,8 +70,7 @@ export const electionRoundOutcomeSelectors = selectorFamily<
 						continue;
 					}
 					const isEqual =
-						!Rational.isGreater(total).than(loser[1]) &&
-						!Rational.isGreater(loser[1]).than(total);
+						!total.isGreaterThan(loser[1]) && !loser[1].isGreaterThan(total);
 					if (isEqual) {
 						losers.push(key);
 					}

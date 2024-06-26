@@ -150,12 +150,12 @@ export const electionRoundVoteTotalsSelectors = selectorFamily<
 						.filter((total) => total !== null);
 
 					for (const denominator of myVoteDenominators) {
-						candidateTotalVote.incorporate(1n, denominator);
+						candidateTotalVote.add(1n, denominator);
 					}
 					return [candidateKey, candidateTotalVote];
 				})
 				.sort(([, totalA], [, totalB]) =>
-					Rational.isGreater(totalA).than(totalB) ? -1 : 1,
+					totalA.isGreaterThan(totalB) ? -1 : 1,
 				);
 			return voteTotals;
 		},
