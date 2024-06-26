@@ -1,0 +1,98 @@
+name: Integration
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    types: [opened, synchronize]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  Lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+        with:
+          fetch-depth: 2
+
+      - name: Set up Node
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 20.14.0
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.1.17
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          version: 8.15.8
+
+      - name: Install Dependencies
+        run: pnpm i
+
+      - name: Biome
+        run: bun lint:biome
+
+      - name: ESLint (Build Original Plugins)
+        run: bun lint:eslint:build
+
+      - name: ESLint
+        run: bun lint:eslint
+
+      - name: Type Check
+        run: bun lint:types
+
+  Test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    env:
+      NEXT_PUBLIC_REMOTE_ORIGIN: ${{ secrets.NEXT_PUBLIC_REMOTE_ORIGIN }} 
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+        with:
+          fetch-depth: 2
+
+      - name: Set up Node
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 20.14.0
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.1.17
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          version: 8.15.8
+
+      - name: Install Dependencies
+        run: pnpm i
+
+      - name: Set up Git
+        run: |
+          git config --global init.defaultBranch main
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+
+      - name: Build
+        run: bun run build
+
+      - name: Test
+        run: bun run test
