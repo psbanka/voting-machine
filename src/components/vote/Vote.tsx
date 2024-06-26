@@ -1,9 +1,7 @@
-import './vote.css'
+import "./vote.css"
 
-function Vote(){
-  return (
-    <div className='vote'>Vote</div>
-  )
+function Vote(): React.ReactNode {
+	return <div className="vote">Vote</div>
 }
 
 export default Vote

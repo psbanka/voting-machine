@@ -188,10 +188,8 @@ const configs = [
 			"simple-import-sort": SimpleImportSortPlugin,
 		},
 		rules: commonRules,
-	},	
-	{
-
-  }
+	},
+	{},
 ]
 
 export default configs
