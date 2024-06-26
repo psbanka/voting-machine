@@ -1,0 +1,62 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.8.2/schema.json",
+	"organizeImports": {
+		"enabled": false
+	},
+	"files": {
+		"ignoreUnknown": true,
+		"ignore": [
+			"*.gen.tsx",
+			"*.gen.ts",
+			"dist/**/*",
+			"node_modules/**/*",
+			"**/metafile-*",
+			"coverage",
+			"projects",
+			".varmint"
+		]
+	},
+	"javascript": {
+		"formatter": {
+			"semicolons": "asNeeded",
+			"trailingCommas": "all"
+		}
+	},
+	"formatter": {
+		"enabled": true,
+		"formatWithErrors": false,
+		"indentStyle": "tab",
+		"indentWidth": 2,
+		"lineWidth": 100,
+		"ignore": ["**/*.gen.ts"]
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"correctness": {
+				"useExhaustiveDependencies": "off"
+			},
+			"complexity": {
+				"noBannedTypes": "off",
+				"useLiteralKeys": "off"
+			},
+			"suspicious": {
+				"noArrayIndexKey": "off",
+				"noAssignInExpressions": "off",
+				"noConfusingVoidType": "off",
+				"noExplicitAny": "off",
+				"noThenProperty": "off",
+				"useValidTypeof": "off"
+			},
+			"style": {
+				"noCommaOperator": "off",
+				"noParameterAssign": "off",
+				"noUnusedTemplateLiteral": "off",
+				"useImportType": "off",
+				"useShorthandFunctionType": "off",
+				"useTemplate": "off"
+			}
+		}
+	}
+}
