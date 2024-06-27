@@ -5,7 +5,7 @@ export class Rational {
 	protected fractionalValues = new Map<bigint, bigint>();
 
 	protected toFloat(): number {
-		const [numerator, denominator] = this.consolidate();
+		const [numerator, denominator] = this.simplify();
 		return Number(numerator) / Number(denominator);
 	}
 
@@ -21,7 +21,7 @@ export class Rational {
 		let numerator: bigint;
 		let denominator = p1;
 		if (p0 instanceof Rational) {
-			[numerator, denominator] = p0.consolidate();
+			[numerator, denominator] = p0.simplify();
 		} else {
 			numerator = p0;
 		}
@@ -34,9 +34,49 @@ export class Rational {
 		return this;
 	}
 
-	public divideBy(that: Rational): Rational;
-	public divideBy(otherNumerator: bigint, otherDenominator: bigint): Rational;
-	public divideBy(p0: bigint | Rational, p1 = 1n): Rational {
+	public sub(that: Rational): Rational;
+	public sub(numerator: bigint, denominator: bigint): Rational;
+	public sub(p0: bigint | Rational, p1 = 1n): Rational {
+		let numerator: bigint;
+		let denominator = p1;
+		if (p0 instanceof Rational) {
+			[numerator, denominator] = p0.simplify();
+		} else {
+			numerator = p0;
+		}
+		let newNumerator = -numerator;
+		const oldNumerator = this.fractionalValues.get(denominator);
+		if (oldNumerator) {
+			newNumerator = oldNumerator - numerator;
+		}
+		this.fractionalValues.set(denominator, newNumerator);
+		return this;
+	}
+
+	public div(that: Rational): Rational;
+	public div(otherNumerator: bigint, otherDenominator: bigint): Rational;
+	public div(p0: bigint | Rational, p1 = 1n): Rational {
+		let otherNumerator: bigint;
+		let otherDenominator = p1;
+		if (p0 instanceof Rational) {
+			[otherNumerator, otherDenominator] = p0.simplify();
+		} else {
+			otherNumerator = p0;
+		}
+		const previousEntries = [...this.entries()];
+		this.fractionalValues.clear();
+		for (const [denominator, numerator] of previousEntries) {
+			this.fractionalValues.set(
+				denominator * otherNumerator,
+				numerator * otherDenominator,
+			);
+		}
+		return this;
+	}
+
+	public mul(that: Rational): Rational;
+	public mul(otherNumerator: bigint, otherDenominator: bigint): Rational;
+	public mul(p0: bigint | Rational, p1 = 1n): Rational {
 		let otherNumerator: bigint;
 		let otherDenominator = p1;
 		if (p0 instanceof Rational) {
@@ -48,8 +88,8 @@ export class Rational {
 		this.fractionalValues.clear();
 		for (const [denominator, numerator] of previousEntries) {
 			this.fractionalValues.set(
-				denominator * otherNumerator,
-				numerator * otherDenominator,
+				denominator * otherDenominator,
+				numerator * otherNumerator,
 			);
 		}
 		return this;
@@ -78,6 +118,7 @@ export class Rational {
 
 	public simplify(): [numerator: bigint, denominator: bigint] {
 		const [numerator, denominator] = this.consolidate();
+		if (numerator === 0n) return [0n, 1n];
 		const commonFactors = new PrimeFactors(denominator).and(numerator);
 		const condensedDenominator = commonFactors.compute();
 		return [

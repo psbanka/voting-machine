@@ -2,17 +2,29 @@ import { describe, it, expect } from "vitest";
 import { Rational } from "../src/rational";
 
 describe("Rational", () => {
-	it("addition and comparison", () => {
+	test("addition and comparison", () => {
 		const a = new Rational(1n, 2n);
 		const b = new Rational(1n, 3n);
 		expect(a.isGreaterThan(b)).toBe(true);
 		b.add(1n, 3n);
 		expect(a.isGreaterThan(b)).toBe(false);
 	});
+	test("subtraction and comparison", () => {
+		const a = new Rational(1n, 2n);
+		const b = new Rational(1n, 3n);
+		expect(a.isGreaterThan(b)).toBe(true);
+		a.sub(1n, 3n);
+		expect(a.isGreaterThan(b)).toBe(false);
+	});
 	test("division", () => {
 		const a = new Rational(1n, 2n);
 		const b = new Rational(1n, 3n);
-		expect(a.divideBy(...b.consolidate())).toStrictEqual(new Rational(3n, 2n));
+		expect(a.div(...b.consolidate())).toStrictEqual(new Rational(3n, 2n));
+	});
+	test("multiplication", () => {
+		const a = new Rational(1n, 2n);
+		const b = new Rational(1n, 3n);
+		expect(a.mul(...b.consolidate())).toStrictEqual(new Rational(1n, 6n));
 	});
 	test("consolidation and simplification", () => {
 		const a = new Rational(1n, 2n);
