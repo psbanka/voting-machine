@@ -1,30 +1,35 @@
-import './userInfo.css'
-import { useUserStore } from '../../../lib/userStore'
+import "./userInfo.css"
+
+import { useUserStore } from "../../../lib/userStore"
 
 type UserInfoProps = {
-  turnOnAdminMode: () => void;
+	turnOnAdminMode: () => void
 }
 
-function UserInfo({ turnOnAdminMode }: UserInfoProps){
-  const { currentUser } = useUserStore();
+function UserInfo({ turnOnAdminMode }: UserInfoProps): JSX.Element {
+	const { currentUser } = useUserStore()
 
-  function handleAdmin(){
-    turnOnAdminMode();
-  }
+	function handleAdmin() {
+		turnOnAdminMode()
+	}
 
-  return (
-    <div className='userInfo'>
-      <div className="user">
-        <img src={currentUser?.avatar || "./avatar.png"} alt="avatar" />
-        <h2>{currentUser?.username}</h2>
-      </div>
-      <div className="icons">
-        <img src="./more.png" alt="more" />
-        {currentUser?.admin && <button onClick={handleAdmin}>Admin</button>}
-        <img src="./edit.png" alt="edit" />
-      </div>
-    </div>
-  )
+	return (
+		<div className="userInfo">
+			<div className="user">
+				<img src={currentUser?.avatar ?? `./avatar.png`} alt="avatar" />
+				<h2>{currentUser?.username}</h2>
+			</div>
+			<div className="icons">
+				<img src="./more.png" alt="more" />
+				{currentUser?.admin && (
+					<button type="button" onClick={handleAdmin}>
+						Admin
+					</button>
+				)}
+				<img src="./edit.png" alt="edit" />
+			</div>
+		</div>
+	)
 }
 
 export default UserInfo

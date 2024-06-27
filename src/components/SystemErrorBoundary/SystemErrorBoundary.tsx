@@ -1,28 +1,28 @@
-import React from 'react';
+import React from "react"
 
 class SystemErrorBoundary extends React.Component {
-  state = {
-    errorMessage: '',
-  };
+	public state = {
+		errorMessage: ``,
+	}
 
-  static getDerivedStateFromError(error: any) {
-    return { errorMessage: error.toString() };
-  }
+	public static getDerivedStateFromError(error: { toString(): string }): { errorMessage: string } {
+		return { errorMessage: error.toString() }
+	}
 
-  componentDidCatch(error: any, info: any) {
-    this.logErrorToServices(error.toString(), info.componentStack);
-  }
+	public componentDidCatch(error: { toString(): string }, info: { componentStack: string }): void {
+		this.logErrorToServices(error.toString(), info.componentStack)
+	}
 
-  // A fake logging service.
-  logErrorToServices = console.log;
+	// A fake logging service.
+	public logErrorToServices = console.log
 
-  render() {
-    if (this.state.errorMessage) {
-      return <p>{this.state.errorMessage}</p>;
-    }
-    // @ts-expect-error ignore this
-    return this.props.children;
-  }
+	public render(): JSX.Element {
+		if (this.state.errorMessage) {
+			return <p>{this.state.errorMessage}</p>
+		}
+		// @ts-expect-error ignore this
+		return this.props.children
+	}
 }
 
-export default SystemErrorBoundary;
+export default SystemErrorBoundary
