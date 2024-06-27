@@ -4,11 +4,6 @@
 export class Rational {
 	protected fractionalValues = new Map<bigint, bigint>();
 
-	protected toFloat(): number {
-		const [numerator, denominator] = this.simplify();
-		return Number(numerator) / Number(denominator);
-	}
-
 	public constructor(numerator?: bigint, denominator = 1n) {
 		if (numerator && denominator) {
 			this.add(numerator, denominator);
@@ -113,6 +108,9 @@ export class Rational {
 		for (const [denominator, numerator] of this.fractionalValues.entries()) {
 			condensedNumerator += (numerator * condensedDenominator) / denominator;
 		}
+		if (condensedDenominator < 0n) {
+			return [-condensedNumerator, -condensedDenominator];
+		}
 		return [condensedNumerator, condensedDenominator];
 	}
 
@@ -128,7 +126,9 @@ export class Rational {
 	}
 
 	public isGreaterThan(that: Rational): boolean {
-		return this.toFloat() > that.toFloat();
+		const a = this.simplify();
+		const b = that.simplify();
+		return a[0] * b[1] > a[1] * b[0];
 	}
 }
 
