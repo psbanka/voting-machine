@@ -1,4 +1,4 @@
-import type { MoleculeTransactors } from "atom.io"
+import type { CtorToolkit } from "atom.io"
 import { atomFamily, moleculeFamily, selectorFamily } from "atom.io"
 import { findRelations } from "atom.io/data"
 
@@ -27,7 +27,7 @@ export const candidateMolecules = moleculeFamily({
 	key: `candidate`,
 	new: class Candidate {
 		public constructor(
-			tools: MoleculeTransactors<string>,
+			tools: CtorToolkit<string>,
 			public key: string,
 			public state = tools.bond(candidateAtoms),
 		) {}
@@ -114,7 +114,7 @@ export const candidateAlternativeConsensusSelectors = selectorFamily<
 
 export class ElectionRoundCandidateState {
 	public constructor(
-		bond: MoleculeTransactors<ElectionRoundCandidateKey>[`bond`],
+		bond: CtorToolkit<ElectionRoundCandidateKey>[`bond`],
 		public status = bond(candidateStatusSelectors),
 		public alternativeConsensus = bond(candidateAlternativeConsensusSelectors),
 	) {}
@@ -124,7 +124,7 @@ export const electionRoundCandidateMolecules = moleculeFamily({
 	new: class ElectionRoundCandidate {
 		public state: ElectionRoundCandidateState
 		public constructor(
-			tools: MoleculeTransactors<ElectionRoundCandidateKey>,
+			tools: CtorToolkit<ElectionRoundCandidateKey>,
 			public key: ElectionRoundCandidateKey,
 		) {
 			this.state = new ElectionRoundCandidateState(tools.bond)

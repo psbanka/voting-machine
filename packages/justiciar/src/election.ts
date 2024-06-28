@@ -1,6 +1,6 @@
-import type { MoleculeTransactors, MoleculeType } from "atom.io"
+import type { CtorToolkit, MoleculeType } from "atom.io"
 import { atomFamily, moleculeFamily, transaction } from "atom.io"
-import { editRelations, findRelations, join } from "atom.io/data"
+import { editRelations, join } from "atom.io/data"
 
 import { candidateMolecules } from "./candidate"
 import { droopQuotaSelectors } from "./droop"
@@ -51,13 +51,12 @@ export const registeredVoters = join({
 
 export class ElectionState {
 	public constructor(
-		bond: MoleculeTransactors<string>[`bond`],
-		j___: MoleculeTransactors<string>[`join`],
+		bond: CtorToolkit<string>[`bond`],
 		public config = bond(electionConfigAtoms),
 		public droopQuota = bond(droopQuotaSelectors),
 		public phase = bond(electionPhaseAtoms),
-		public candidates = j___(electionCandidates),
-		public voters = j___(registeredVoters),
+		public candidates = bond(electionCandidates, { as: `election` }),
+		public voters = bond(registeredVoters, { as: `election` }),
 	) {}
 }
 export const electionMolecules = moleculeFamily({
@@ -66,11 +65,11 @@ export const electionMolecules = moleculeFamily({
 		public state: ElectionState
 		public rounds: ElectionRoundInstance[] = []
 		public constructor(
-			private tools: MoleculeTransactors<string>,
+			private tools: CtorToolkit<string>,
 			public key: string,
 			config: ElectionConfig,
 		) {
-			this.state = new ElectionState(tools.bond, tools.join)
+			this.state = new ElectionState(tools.bond)
 			this.tools.set(this.state.config, config)
 		}
 		public registerVoter = transaction<(voterId: string) => void>({
@@ -80,7 +79,7 @@ export const electionMolecules = moleculeFamily({
 				if (phase.voterRegistrationIsOpen === false) {
 					throw new Error(`Tried to register voter "${voterId}" but voter registration is closed`)
 				}
-				editRelations(this.state.voters, (voters) => {
+				editRelations(registeredVoters, (voters) => {
 					voters.set({ election: this.key, voter: voterId })
 				})
 			},
@@ -94,7 +93,7 @@ export const electionMolecules = moleculeFamily({
 						`Tried to register candidate "${candidateId}" but this election is in the "${phase.name}" phase, not the "registration" phase`,
 					)
 				}
-				editRelations(this.state.candidates, (candidates) => {
+				editRelations(electionCandidates, (candidates) => {
 					candidates.set({ election: this.key, candidate: candidateId })
 				})
 				make({ type: `molecule`, key: this.key }, candidateMolecules, candidateId)
@@ -110,9 +109,8 @@ export const electionMolecules = moleculeFamily({
 					)
 				}
 				const { voterId } = ballot
-				const voterIndex = findRelations(this.state.voters, this.key).voterKeysOfElection
-				const voterIds = get(voterIndex)
-				if (!voterIds.includes(voterId)) {
+				const voterKeys = get(this.state.voters.relatedKeys)
+				if (!voterKeys.includes(voterId)) {
 					throw new Error(`Voter "${voterId}" not registered in election "${this.key}"`)
 				}
 
@@ -126,11 +124,7 @@ export const electionMolecules = moleculeFamily({
 					)
 				}
 
-				const candidateKeysSelector = findRelations(
-					this.state.candidates,
-					this.key,
-				).candidateKeysOfElection
-				const candidateKeys = get(candidateKeysSelector)
+				const candidateKeys = get(this.state.candidates.relatedKeys)
 
 				editRelations(votes, (relations) => {
 					let idx = 0

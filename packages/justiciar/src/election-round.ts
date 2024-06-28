@@ -1,6 +1,5 @@
-import type { MoleculeTransactors, MoleculeType, ReadonlySelectorToken } from "atom.io"
+import type { CtorToolkit, MoleculeType, ReadonlySelectorToken } from "atom.io"
 import { moleculeFamily, selectorFamily } from "atom.io"
-import { findRelations } from "atom.io/data"
 
 import { electionRoundCandidateMolecules } from "./candidate"
 import { type ElectionInstance, electionMolecules } from "./election"
@@ -72,7 +71,7 @@ export const electionRoundOutcomeSelectors = selectorFamily<
 export class ElectionRoundState {
 	public voteTotals?: ReadonlySelectorToken<ElectionRoundVoteTotal[]>
 	public outcome?: ReadonlySelectorToken<ElectionRoundOutcome | Error>
-	public constructor(private bond: MoleculeTransactors<ElectionRoundKey>[`bond`]) {}
+	public constructor(private bond: CtorToolkit<ElectionRoundKey>[`bond`]) {}
 	public setup(): void {
 		this.voteTotals = this.bond(electionRoundVoteTotalsSelectors)
 		this.outcome = this.bond(electionRoundOutcomeSelectors)
@@ -84,16 +83,14 @@ export const electionRoundMolecules = moleculeFamily({
 		public state: ElectionRoundState
 		public voters = new Map<string, ElectionRoundVoterInstance>()
 		public constructor(
-			private tools: MoleculeTransactors<ElectionRoundKey>,
+			private tools: CtorToolkit<ElectionRoundKey>,
 			public key: ElectionRoundKey,
 			public election: ElectionInstance,
 		) {
 			this.state = new ElectionRoundState(this.tools.bond)
 		}
 		public setup() {
-			const candidates = this.tools.get(
-				findRelations(this.election.state.candidates, this.election.key).candidateKeysOfElection,
-			)
+			const candidates = this.tools.get(this.election.state.candidates.relatedKeys)
 			for (const candidate of candidates) {
 				this.tools.spawn(electionRoundCandidateMolecules, {
 					electionRound: this.key,
