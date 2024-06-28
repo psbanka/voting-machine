@@ -4,7 +4,6 @@ import { getFirestore } from "firebase/firestore"
 import { getStorage } from "firebase/storage"
 
 const firebaseConfig = {
-	// @ts-expect-error vite env not recognized
 	apiKey: import.meta.env.VITE_API_KEY,
 	authDomain: `pdx-candidates-2024.firebaseapp.com`,
 	projectId: `pdx-candidates-2024`,
