@@ -97,8 +97,8 @@ importers:
   packages/justiciar:
     dependencies:
       atom.io:
-        specifier: 0.25.1
-        version: 0.25.1(@testing-library/react@16.0.0(@testing-library/dom@10.1.0)(@types/react-dom@18.2.22)(@types/react@18.2.66)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
+        specifier: 0.25.2
+        version: 0.25.2(@testing-library/react@16.0.0(@testing-library/dom@10.1.0)(@types/react-dom@18.2.22)(@types/react@18.2.66)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
     devDependencies:
       '@vitest/browser':
         specifier: 1.6.0
@@ -1330,8 +1330,8 @@ packages:
       socket.io-client:
         optional: true
 
-  atom.io@0.25.1:
-    resolution: {integrity: sha512-dv1BU5MbOdEJRmxhhrKvB4XYCoyGxG+YYwEqsC1oTUwlcPbtyWUUTdxVSNCUxPoMDBcwIVdPzwzNV8LpiG13yw==}
+  atom.io@0.25.2:
+    resolution: {integrity: sha512-RRE+32ICVWKjwWSqAIn2B+p9KYTgmlKcy7HrJVA8/QS6VDGDhoZyP1GMTFIZvkXFsG5l0pwbLqjJjg4CFDdT/A==}
     peerDependencies:
       '@floating-ui/react': '>=0.25.0'
       '@floating-ui/react-dom': '>=2.0.0'
@@ -5265,7 +5265,7 @@ snapshots:
       '@testing-library/react': 16.0.0(@testing-library/dom@10.1.0)(@types/react-dom@18.2.22)(@types/react@18.2.66)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
 
-  atom.io@0.25.1(@testing-library/react@16.0.0(@testing-library/dom@10.1.0)(@types/react-dom@18.2.22)(@types/react@18.2.66)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0):
+  atom.io@0.25.2(@testing-library/react@16.0.0(@testing-library/dom@10.1.0)(@types/react-dom@18.2.22)(@types/react@18.2.66)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0):
     optionalDependencies:
       '@testing-library/react': 16.0.0(@testing-library/dom@10.1.0)(@types/react-dom@18.2.22)(@types/react@18.2.66)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
