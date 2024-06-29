@@ -20,8 +20,8 @@ export const electionRoundOutcomeSelectors = selectorFamily<
 	key: `electionRoundOutcome`,
 	get:
 		(keys) =>
-		({ get, seek }) => {
-			const election = need(get(need(seek(electionMolecules, keys.election))))
+		({ get }) => {
+			const election = get(electionMolecules, keys.election)
 			const electionRound = election.rounds[keys.round]
 			const voteTotals = get(need(electionRound.state.voteTotals))
 			const droopQuota = get(election.state.droopQuota)

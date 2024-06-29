@@ -45,8 +45,8 @@ export const candidateStatusSelectors = selectorFamily<
 	key: `candidateStatus`,
 	get:
 		(keys) =>
-		({ get, seek }) => {
-			const election = need(get(need(seek(electionMolecules, keys.electionRound.election))))
+		({ get }) => {
+			const election = get(electionMolecules, keys.electionRound.election)
 			const previousElectionRounds = election.rounds.slice(0, keys.electionRound.round)
 			let status: CandidateStatus = `running`
 			for (const round of previousElectionRounds) {

@@ -34,7 +34,7 @@ export const voterCurrentFavoritesSelectors = selectorFamily<
 	key: `voterCurrentFavorites`,
 	get:
 		(keys) =>
-		({ get, seek }) => {
+		({ get }) => {
 			const votedForCandidateKeys = get(findRelations(votes, keys.voter).candidateEntriesOfVoter)
 			const stillRunning = votedForCandidateKeys.filter(([candidateKey]) => {
 				const electionRoundCandidateKey = {
@@ -42,8 +42,7 @@ export const voterCurrentFavoritesSelectors = selectorFamily<
 					candidate: candidateKey,
 				}
 
-				const candidateStatusToken = seek(candidateStatusSelectors, electionRoundCandidateKey)
-				const candidateStatus = get(need(candidateStatusToken))
+				const candidateStatus = get(candidateStatusSelectors, electionRoundCandidateKey)
 				return candidateStatus === `running`
 			})
 			let topTier = Number.POSITIVE_INFINITY
@@ -100,9 +99,9 @@ export const electionRoundVoteTotalsSelectors = selectorFamily<
 	key: `electionRoundVoteTotals`,
 	get:
 		(keys) =>
-		({ get, seek }) => {
-			const election = need(get(need(seek(electionMolecules, keys.election))))
-			const electionRound = need(get(need(seek(electionRoundMolecules, keys))))
+		({ get }) => {
+			const election = get(electionMolecules, keys.election)
+			const electionRound = get(electionRoundMolecules, keys)
 
 			const candidates = get(election.state.candidates.relatedKeys)
 			const runningCandidates = candidates.filter((candidateKey) => {
@@ -110,7 +109,7 @@ export const electionRoundVoteTotalsSelectors = selectorFamily<
 					electionRound: keys,
 					candidate: candidateKey,
 				}
-				const candidate = need(get(need(seek(electionRoundCandidateMolecules, candidateRoundKey))))
+				const candidate = get(electionRoundCandidateMolecules, candidateRoundKey)
 				const status = get(candidate.state.status)
 				return status === `running`
 			})
