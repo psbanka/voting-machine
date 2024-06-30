@@ -25,28 +25,3 @@ async function inferDemoSchema(concept: string): Promise<string[]> {
 	return schema
 }
 export const getDemoJsonSchema = squirrel.add(`json-schema`, inferDemoSchema)
-
-// const aiTopicsDemo = squirrel.add("ai-issues", aiComplete);
-// export async function getDemoTopics(): Promise<Topic[]> {
-// 	return Promise.all(
-// 		Array.from({ length: 3 }).map(async (name) => {
-// 			const description = (
-// 				await aiTopicsDemo.for(`${name}-description`).get({
-// 					model: OPENAI_MODEL,
-// 					stream: true,
-// 					messages: [
-// 						{
-// 							role: "system",
-// 							content: `In a concise sentence, please provide an overview of the following topic: "${name}".`,
-// 						},
-// 					],
-// 				})
-// 			).message.content;
-// 			return {
-// 				name,
-// 				key: rng.next().toString().slice(2, 8),
-// 				description,
-// 			};
-// 		}),
-// 	);
-// }

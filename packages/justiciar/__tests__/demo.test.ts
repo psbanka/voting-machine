@@ -1,6 +1,6 @@
 import { describe, test } from "vitest"
 
-import { DEMO_DATA_CONCEPTS, getDemoJsonSchema } from "../demo/candidates"
+import { DEMO_DATA_CONCEPTS, getDemoJsonSchema } from "../demo/issues"
 
 describe(`demo schemas`, () => {
 	test(`generation`, async () => {
