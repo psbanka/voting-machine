@@ -4,6 +4,7 @@ import { findRelations } from "atom.io/data"
 
 import { electionMolecules, votes } from "./election"
 import type { ElectionRoundKey } from "./election-round"
+import { Rational } from "./rational"
 import { need } from "./refinements"
 import { voterCurrentFavoritesSelectors } from "./voter"
 
@@ -70,7 +71,7 @@ export const candidateStatusSelectors = selectorFamily<
 })
 
 export type AlternativeConsensus = {
-	[candidateKey: string]: Map<bigint, bigint>
+	[candidateKey: string]: Rational
 }
 export const candidateAlternativeConsensusSelectors = selectorFamily<
 	AlternativeConsensus | Error,
@@ -96,15 +97,19 @@ export const candidateAlternativeConsensusSelectors = selectorFamily<
 				if (candidateIsTopTier) {
 					const voterAlternatives =
 						topTier.length === 1 ? nextTier : topTier.filter((key) => key !== keys.candidate)
-					const voteDivisor = BigInt(topTier.length * voterAlternatives.length)
+
+					const numberOfCandidatesCurrentlySharingVote = topTier.length
+					const numberOfCandidatesWhoWillShareVote = voterAlternatives.length
+					const voteDivisor = BigInt(
+						numberOfCandidatesCurrentlySharingVote * numberOfCandidatesWhoWillShareVote,
+					)
 					for (const voterAlternative of voterAlternatives) {
 						let alternative = alternativeConsensus[voterAlternative]
 						if (!alternative) {
-							alternative = new Map<bigint, bigint>()
+							alternative = new Rational()
 							alternativeConsensus[voterAlternative] = alternative
 						}
-						const alternativeCurrent = alternative.get(voteDivisor) ?? 0n
-						alternative.set(voteDivisor, alternativeCurrent + 1n)
+						alternative.add(1n, voteDivisor)
 					}
 				}
 			}
