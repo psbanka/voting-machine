@@ -12,13 +12,13 @@ export class Rational {
 
 	public add(that: Rational): Rational
 	public add(numerator: bigint, denominator: bigint): Rational
-	public add(p0: Rational | bigint, p1 = 1n): this {
+	public add(...params: [numerator: bigint, denominator: bigint] | [rational: Rational]): this {
 		let numerator: bigint
-		let denominator = p1
-		if (p0 instanceof Rational) {
-			;[numerator, denominator] = p0.simplify()
+		let denominator: bigint
+		if (params.length === 1) {
+			;[numerator, denominator] = params[0].simplify()
 		} else {
-			numerator = p0
+			;[numerator, denominator] = params
 		}
 		let newNumerator = numerator
 		const oldNumerator = this.fractionalValues.get(denominator)
@@ -31,13 +31,13 @@ export class Rational {
 
 	public sub(that: Rational): Rational
 	public sub(numerator: bigint, denominator: bigint): Rational
-	public sub(p0: Rational | bigint, p1 = 1n): this {
+	public sub(...params: [numerator: bigint, denominator: bigint] | [rational: Rational]): this {
 		let numerator: bigint
-		let denominator = p1
-		if (p0 instanceof Rational) {
-			;[numerator, denominator] = p0.simplify()
+		let denominator: bigint
+		if (params.length === 1) {
+			;[numerator, denominator] = params[0].simplify()
 		} else {
-			numerator = p0
+			;[numerator, denominator] = params
 		}
 		let newNumerator = -numerator
 		const oldNumerator = this.fractionalValues.get(denominator)
@@ -50,13 +50,15 @@ export class Rational {
 
 	public div(that: Rational): Rational
 	public div(otherNumerator: bigint, otherDenominator: bigint): Rational
-	public div(p0: Rational | bigint, p1 = 1n): this {
+	public div(
+		...params: [otherNumerator: bigint, otherDenominator: bigint] | [rational: Rational]
+	): this {
 		let otherNumerator: bigint
-		let otherDenominator = p1
-		if (p0 instanceof Rational) {
-			;[otherNumerator, otherDenominator] = p0.simplify()
+		let otherDenominator: bigint
+		if (params.length === 1) {
+			;[otherNumerator, otherDenominator] = params[0].simplify()
 		} else {
-			otherNumerator = p0
+			;[otherNumerator, otherDenominator] = params
 		}
 		const previousEntries = [...this.entries()]
 		this.fractionalValues.clear()
@@ -68,13 +70,15 @@ export class Rational {
 
 	public mul(that: Rational): Rational
 	public mul(otherNumerator: bigint, otherDenominator: bigint): Rational
-	public mul(p0: Rational | bigint, p1 = 1n): this {
+	public mul(
+		...params: [otherNumerator: bigint, otherDenominator: bigint] | [rational: Rational]
+	): this {
 		let otherNumerator: bigint
-		let otherDenominator = p1
-		if (p0 instanceof Rational) {
-			;[otherNumerator, otherDenominator] = p0.consolidate()
+		let otherDenominator: bigint
+		if (params.length === 1) {
+			;[otherNumerator, otherDenominator] = params[0].consolidate()
 		} else {
-			otherNumerator = p0
+			;[otherNumerator, otherDenominator] = params
 		}
 		const previousEntries = [...this.entries()]
 		this.fractionalValues.clear()
