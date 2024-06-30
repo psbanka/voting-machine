@@ -83,3 +83,6 @@ jobs:
 
       - name: Test
         run: bun run test
+        env:
+           VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
+
