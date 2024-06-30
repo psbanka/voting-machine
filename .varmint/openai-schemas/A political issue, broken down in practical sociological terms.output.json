@@ -1,0 +1,23 @@
+{
+	"id": "chatcmpl-9dYLMpDU9xELX1MU1Pwvuc9fPqQ3v",
+	"object": "chat.completion",
+	"created": 1719213836,
+	"model": "gpt-4o-2024-05-13",
+	"choices": [
+		{
+			"index": 0,
+			"message": {
+				"role": "assistant",
+				"content": "\n{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"title\": \"PoliticalIssue\",\n  \"description\": \"A schema representing a political issue, broken down in practical sociological terms.\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"issueName\": {\n      \"type\": \"string\",\n      \"description\": \"The name of the political issue.\"\n    },\n    \"description\": {\n      \"type\": \"string\",\n      \"description\": \"A detailed description of the political issue.\"\n    },\n    \"historicalBackground\": {\n      \"type\": \"string\",\n      \"description\": \"The historical context and background of the issue.\"\n    },\n    \"stakeholders\": {\n      \"type\": \"array\",\n      \"description\": \"Key groups or individuals affected by or involved in the issue.\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"sociologicalFactors\": {\n      \"type\": \"object\",\n      \"description\": \"Key sociological factors associated with the issue.\",\n      \"properties\": {\n        \"demographicImpact\": {\n          \"type\": \"string\",\n          \"description\": \"An analysis of how different demographic groups are affected by the issue.\"\n        },\n        \"culturalFactors\": {\n          \"type\": \"string\",\n          \"description\": \"Cultural dynamics related to the issue.\"\n        },\n        \"economicImpact\": {\n          \"type\": \"string\",\n          \"description\": \"A description of the economic implications of the issue.\"\n        },\n        \"legalFramework\": {\n          \"type\": \"string\",\n          \"description\": \"Existing laws and regulations related to the issue.\"\n        },\n        \"publicOpinion\": {\n          \"type\": \"string\",\n          \"description\": \"General public opinion and sentiment regarding the issue.\"\n        },\n        \"mediaCoverage\": {\n          \"type\": \"string\",\n          \"description\": \"The nature and extent of media coverage on the issue.\"\n        },\n        \"policyResponses\": {\n          \"type\": \"string\",\n          \"description\": \"Government or organizational policies addressing the issue.\"\n        }\n      },\n      \"required\": [\n        \"demographicImpact\",\n        \"culturalFactors\",\n        \"economicImpact\",\n        \"legalFramework\",\n        \"publicOpinion\",\n        \"mediaCoverage\",\n        \"policyResponses\"\n      ]\n    },\n    \"geographicalScope\": {\n      \"type\": \"string\",\n      \"description\": \"The geographical area affected by or relevant to the issue (e.g., local, national, global).\"\n    },\n    \"currentStatus\": {\n      \"type\": \"string\",\n      \"description\": \"The current status or phase of the issue.\"\n    },\n    \"potentialSolutions\": {\n      \"type\": \"array\",\n      \"description\": \"Proposed solutions or approaches to addressing the issue.\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    }\n  },\n  \"required\": [\n    \"issueName\",\n    \"description\",\n    \"historicalBackground\",\n    \"stakeholders\",\n    \"sociologicalFactors\",\n    \"geographicalScope\",\n    \"currentStatus\",\n    \"potentialSolutions\"\n  ]\n}"
+			},
+			"logprobs": null,
+			"finish_reason": "stop"
+		}
+	],
+	"usage": {
+		"prompt_tokens": 30,
+		"completion_tokens": 649,
+		"total_tokens": 679
+	},
+	"system_fingerprint": "fp_3e7d703517"
+}

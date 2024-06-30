@@ -1,0 +1,95 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "PoliticalIssue",
+	"description": "A schema representing a political issue, broken down in practical sociological terms.",
+	"type": "object",
+	"properties": {
+		"issueName": {
+			"type": "string",
+			"description": "The name of the political issue."
+		},
+		"description": {
+			"type": "string",
+			"description": "A detailed description of the political issue."
+		},
+		"historicalBackground": {
+			"type": "string",
+			"description": "The historical context and background of the issue."
+		},
+		"stakeholders": {
+			"type": "array",
+			"description": "Key groups or individuals affected by or involved in the issue.",
+			"items": {
+				"type": "string"
+			}
+		},
+		"sociologicalFactors": {
+			"type": "object",
+			"description": "Key sociological factors associated with the issue.",
+			"properties": {
+				"demographicImpact": {
+					"type": "string",
+					"description": "An analysis of how different demographic groups are affected by the issue."
+				},
+				"culturalFactors": {
+					"type": "string",
+					"description": "Cultural dynamics related to the issue."
+				},
+				"economicImpact": {
+					"type": "string",
+					"description": "A description of the economic implications of the issue."
+				},
+				"legalFramework": {
+					"type": "string",
+					"description": "Existing laws and regulations related to the issue."
+				},
+				"publicOpinion": {
+					"type": "string",
+					"description": "General public opinion and sentiment regarding the issue."
+				},
+				"mediaCoverage": {
+					"type": "string",
+					"description": "The nature and extent of media coverage on the issue."
+				},
+				"policyResponses": {
+					"type": "string",
+					"description": "Government or organizational policies addressing the issue."
+				}
+			},
+			"required": [
+				"demographicImpact",
+				"culturalFactors",
+				"economicImpact",
+				"legalFramework",
+				"publicOpinion",
+				"mediaCoverage",
+				"policyResponses"
+			]
+		},
+		"geographicalScope": {
+			"type": "string",
+			"description": "The geographical area affected by or relevant to the issue (e.g., local, national, global)."
+		},
+		"currentStatus": {
+			"type": "string",
+			"description": "The current status or phase of the issue."
+		},
+		"potentialSolutions": {
+			"type": "array",
+			"description": "Proposed solutions or approaches to addressing the issue.",
+			"items": {
+				"type": "string"
+			}
+		}
+	},
+	"required": [
+		"issueName",
+		"description",
+		"historicalBackground",
+		"stakeholders",
+		"sociologicalFactors",
+		"geographicalScope",
+		"currentStatus",
+		"potentialSolutions"
+	]
+}
