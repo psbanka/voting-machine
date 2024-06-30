@@ -208,8 +208,7 @@ export const electionMolecules = moleculeFamily({
 				round: this.rounds.length,
 			}
 			const token = this.tools.spawn(electionRoundMolecules, keys, this)
-			// biome-ignore lint/style/noNonNullAssertion: just created it
-			const round = this.tools.get(token)!
+			const round = this.tools.get(token)
 			this.rounds.push(round)
 			round.setup()
 			return round

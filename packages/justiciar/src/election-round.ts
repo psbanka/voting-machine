@@ -104,8 +104,7 @@ export const electionRoundMolecules = moleculeFamily({
 		): InstanceType<MoleculeType<typeof electionRoundVoterMolecules>> {
 			const key = { electionRound: this.key, voter: voterId }
 			const token = this.tools.spawn(electionRoundVoterMolecules, key)
-			// biome-ignore lint/style/noNonNullAssertion: just created it
-			const roundVoter = this.tools.get(token)!
+			const roundVoter = this.tools.get(token)
 			this.voters.set(voterId, roundVoter)
 			return roundVoter
 		}
