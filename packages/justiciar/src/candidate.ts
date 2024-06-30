@@ -81,10 +81,13 @@ export const candidateAlternativeConsensusSelectors = selectorFamily<
 	get:
 		(keys) =>
 		({ get, seek }) => {
-			const votersForCandidateSelector = findRelations(votes, keys.candidate).voterKeysOfCandidate
-			const votersForCandidate = get(votersForCandidateSelector)
+			const voterKeysForCandidateSelector = findRelations(
+				votes,
+				keys.candidate,
+			).voterKeysOfCandidate
+			const voterKeysForCandidate = get(voterKeysForCandidateSelector)
 			const alternativeConsensus: AlternativeConsensus = {}
-			for (const voterKey of votersForCandidate) {
+			for (const voterKey of voterKeysForCandidate) {
 				const voterCurrentFavoritesSelector = seek(voterCurrentFavoritesSelectors, {
 					electionRound: keys.electionRound,
 					voter: voterKey,
