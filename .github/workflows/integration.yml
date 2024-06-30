@@ -24,20 +24,19 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Set up Node
-        uses: actions/setup-node@v4.0.2
+      - name: 🧳 Set up pnpm
+        uses: pnpm/action-setup@v2
+
+      - name: ⎔  Install Node LTS
+        uses: actions/setup-node@v3
         with:
-          node-version: 20.14.0
+          cache: pnpm
+          node-version-file: ".nvmrc"
 
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.1.17
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4.0.0
-        with:
-          version: 8.15.8
 
       - name: Install Dependencies
         run: pnpm i
@@ -62,20 +61,19 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Set up Node
-        uses: actions/setup-node@v4.0.2
+      - name: 🧳 Set up pnpm
+        uses: pnpm/action-setup@v2
+
+      - name: ⎔  Install Node LTS
+        uses: actions/setup-node@v3
         with:
-          node-version: 20.14.0
+          cache: pnpm
+          node-version-file: ".nvmrc"
 
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.1.17
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4.0.0
-        with:
-          version: 8.15.8
 
       - name: Install Dependencies
         run: pnpm i
@@ -85,3 +83,6 @@ jobs:
 
       - name: Test
         run: bun run test
+        env:
+           VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
+
