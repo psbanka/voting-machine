@@ -1,10 +1,10 @@
 {
-  "recommendations": [
-    "biomejs.biome",
-    "dbaeumer.vscode-eslint",
-    "streetsidesoftware.code-spell-checker",
-    "ryanluker.vscode-coverage-gutters",
-    "christian-kohler.npm-intellisense",
-    "github.vscode-github-actions"
-  ]
+	"recommendations": [
+		"biomejs.biome",
+		"dbaeumer.vscode-eslint",
+		"streetsidesoftware.code-spell-checker",
+		"ryanluker.vscode-coverage-gutters",
+		"christian-kohler.npm-intellisense",
+		"github.vscode-github-actions"
+	]
 }
