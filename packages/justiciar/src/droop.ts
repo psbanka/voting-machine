@@ -4,8 +4,8 @@ import { findRelations } from "atom.io/data"
 import { electionConfigAtoms, registeredVoters } from "./election"
 
 export function droopQuota(numberOfVoters: bigint, numberOfWinners: bigint): bigint {
-	const winnerCountPlusOne = numberOfWinners + 1n
-	const quotientWithoutRemainder = numberOfVoters / winnerCountPlusOne
+	const numberOfWinnersPlusOne = numberOfWinners + 1n
+	const quotientWithoutRemainder = numberOfVoters / numberOfWinnersPlusOne
 	const quota = quotientWithoutRemainder + 1n
 	return quota
 }
@@ -21,14 +21,14 @@ export const droopQuotaSelectors = selectorFamily<Error | bigint, string>({
 					`Droop Quota calculation relies on electionConfig, which for election "${electionId}" was not found`,
 				)
 			}
-			const { winnerCount } = get(configAtom)
+			const { numberOfWinners } = get(configAtom)
 			const registeredVoterKeysSelector = findRelations(
 				registeredVoters,
 				electionId,
 			).voterKeysOfElection
 			const registeredVoterKeys = get(registeredVoterKeysSelector)
 			const numberOfVoters = BigInt(registeredVoterKeys.length)
-			const quota = droopQuota(numberOfVoters, winnerCount)
+			const quota = droopQuota(numberOfVoters, numberOfWinners)
 			return quota
 		},
 })

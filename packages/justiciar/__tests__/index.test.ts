@@ -7,7 +7,7 @@ describe(`core procedures`, () => {
 	it(`should return the correct divisibleVotingPower`, () => {
 		const root = makeRootMolecule(`root`)
 		const electionToken = makeMolecule(root, electionMolecules, `election0`, {
-			winnerCount: 2n,
+			numberOfWinners: 2n,
 			votingTiers: [3n, 3n, 3n],
 		})
 		const election = getState(electionToken)

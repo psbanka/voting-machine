@@ -18,12 +18,12 @@ const electionPhaseAtoms = atomFamily<ElectionPhase, string>({
 })
 
 export type ElectionConfig = {
-	winnerCount: bigint
+	numberOfWinners: bigint
 	votingTiers: ReadonlyArray<bigint>
 }
 export const electionConfigAtoms = atomFamily<ElectionConfig, string>({
 	key: `electionConfig`,
-	default: { winnerCount: 1n, votingTiers: [1n] },
+	default: { numberOfWinners: 1n, votingTiers: [1n] },
 })
 
 export const votes = join(
