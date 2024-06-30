@@ -1,0 +1,14 @@
+[
+	{
+		"model": "gpt-4o",
+		"response_format": {
+			"type": "json_object"
+		},
+		"messages": [
+			{
+				"role": "system",
+				"content": "Please provide a JSON schema for the following concept: \"A political issue, broken down in practical sociological terms\"."
+			}
+		]
+	}
+]
