@@ -3,8 +3,10 @@ import { moleculeFamily, selectorFamily } from "atom.io"
 import { findRelations } from "atom.io/data"
 
 import { candidateStatusSelectors } from "./candidate"
-import { votes } from "./election"
+import { electionMolecules, votes } from "./election"
 import type { ElectionRoundKey } from "./election-round"
+import { Rational } from "./rational"
+import { need } from "./refinements"
 
 export type Voter = {
 	type: `voter`
@@ -32,8 +34,8 @@ export const voterCurrentFavoritesSelectors = selectorFamily<
 	get:
 		(keys) =>
 		({ get }) => {
-			const votedForCandidateKeys = get(findRelations(votes, keys.voter).candidateEntriesOfVoter)
-			const stillRunning = votedForCandidateKeys.filter(([candidateKey]) => {
+			const votedForCandidateEntries = get(findRelations(votes, keys.voter).candidateEntriesOfVoter)
+			const stillRunning = votedForCandidateEntries.filter(([candidateKey]) => {
 				const electionRoundCandidateKey = {
 					electionRound: keys.electionRound,
 					candidate: candidateKey,
@@ -66,10 +68,51 @@ export const voterCurrentFavoritesSelectors = selectorFamily<
 		},
 })
 
+export const voterRemainingEnergySelectors = selectorFamily<
+	Error | Rational,
+	ElectionRoundVoterKey
+>({
+	key: `voterRemainingEnergy`,
+	get:
+		(keys) =>
+		({ get }) => {
+			const remainingEnergy = new Rational(1n)
+			const election = get(electionMolecules, keys.electionRound.election)
+			// const votedForCandidateEntries = get(findRelations(votes, keys.voter).candidateEntriesOfVoter)
+			const previousElectionRounds = election.rounds.slice(0, keys.electionRound.round)
+			let roundNumber = -1
+			for (const round of previousElectionRounds) {
+				roundNumber++
+				const [voterFavoritesDuringRound] = get(voterCurrentFavoritesSelectors, {
+					electionRound: { election: keys.electionRound.election, round: roundNumber },
+					voter: keys.voter,
+				})
+				const numberOfFavoriteCandidates = BigInt(voterFavoritesDuringRound.length)
+				const outcome = get(need(round.state.outcome))
+				if (outcome instanceof Error) {
+					return outcome
+				}
+				if (outcome.type === `elected`) {
+					for (const electedCandidate of outcome.candidates) {
+						if (voterFavoritesDuringRound.includes(electedCandidate.key)) {
+							const refund = new Rational()
+								.add(electedCandidate.surplus)
+								.div(electedCandidate.total)
+								.div(numberOfFavoriteCandidates)
+							remainingEnergy.sub(1n, numberOfFavoriteCandidates).add(refund)
+						}
+					}
+				}
+			}
+			return remainingEnergy
+		},
+})
+
 export class ElectionRoundVoterState {
 	public constructor(
 		bond: CtorToolkit<ElectionRoundVoterKey>[`bond`],
 		public favorites = bond(voterCurrentFavoritesSelectors),
+		public remainingEnergy = bond(voterRemainingEnergySelectors),
 	) {}
 }
 export const electionRoundVoterMolecules = moleculeFamily({
