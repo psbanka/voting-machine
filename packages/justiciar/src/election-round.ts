@@ -1,14 +1,65 @@
 import type { CtorToolkit, MoleculeType, ReadonlySelectorToken } from "atom.io"
 import { moleculeFamily, selectorFamily } from "atom.io"
+import { findRelations } from "atom.io/data"
 
 import { electionRoundCandidateMolecules } from "./candidate"
-import { type ElectionInstance, electionMolecules } from "./election"
+import { type ElectionInstance, electionMolecules, votes } from "./election"
 import { Rational } from "./rational"
 import { need } from "./refinements"
-import type { ElectionRoundVoterInstance, ElectionRoundVoteTotal } from "./voter"
-import { electionRoundVoterMolecules, electionRoundVoteTotalsSelectors } from "./voter"
+import type { ElectionRoundVoterInstance } from "./voter"
+import { electionRoundVoterMolecules } from "./voter"
 
 export type ElectionRoundKey = { election: string; round: number }
+
+export type ElectionRoundVoteTotal = [candidateId: string, voteTotal: Rational]
+export const electionRoundVoteTotalsSelectors = selectorFamily<
+	ElectionRoundVoteTotal[],
+	ElectionRoundKey
+>({
+	key: `electionRoundVoteTotals`,
+	get:
+		(keys) =>
+		({ get }) => {
+			const election = get(electionMolecules, keys.election)
+			const electionRound = get(electionRoundMolecules, keys)
+
+			const candidates = get(election.state.candidates.relatedKeys)
+			const runningCandidates = candidates.filter((candidateKey) => {
+				const candidateRoundKey = {
+					electionRound: keys,
+					candidate: candidateKey,
+				}
+				const candidate = get(electionRoundCandidateMolecules, candidateRoundKey)
+				const status = get(candidate.state.status)
+				return status === `running`
+			})
+
+			const voteTotals = runningCandidates
+				.map<ElectionRoundVoteTotal>((candidateKey) => {
+					const candidateTotalVote = new Rational()
+					const candidateVoterKeys = get(findRelations(votes, candidateKey).voterKeysOfCandidate)
+
+					const myVoteDenominators = candidateVoterKeys
+						.map<bigint | null>((voterKey) => {
+							const voter = electionRound.voters.get(voterKey) ?? electionRound.spawnVoter(voterKey)
+							const [voterTopFavorites] = get(voter.state.favorites)
+							if (!voterTopFavorites.includes(candidateKey)) {
+								return null
+							}
+							const denominator = BigInt(voterTopFavorites.length)
+							return denominator
+						})
+						.filter((total) => total !== null)
+
+					for (const denominator of myVoteDenominators) {
+						candidateTotalVote.add(1n, denominator)
+					}
+					return [candidateKey, candidateTotalVote]
+				})
+				.sort(([, totalA], [, totalB]) => (totalA.isGreaterThan(totalB) ? -1 : 1))
+			return voteTotals
+		},
+})
 
 export type ElectionRoundOutcome =
 	| { type: `elected`; candidates: [key: string, surplus: Rational][] }
